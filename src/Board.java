@@ -21,31 +21,19 @@ public class Board extends Application {
         primaryStage.setHeight(1000);
         primaryStage.setWidth(1000);
 
-        RectangleCell [][]rectangleCells=new RectangleCell[10][10];
+        RectangleCell[][] rectangleCells = new RectangleCell[10][10];
+
+
 
         //Gridpane som placeras i mitten av fönstret med själva spelplanen
         GridPane pane = new GridPane();
-        int count = 0;
-
         for (int i = 0; i < 10; i++) {
-            count++;
             for (int j = 0; j < 10; j++) {
-               RectangleCell rectangleCell = new RectangleCell();
+                RectangleCell rectangleCell = new RectangleCell();
                 rectangleCells[i][j] = rectangleCell;
-
-                pane.add(rectangleCells[i][j].getRectangelCell(),i,j);
-
-                count++;
+                pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
             }
         }
-
-
-
-
-
-
-
-
 
 
         // Button[][] shipButtons = ShipPlacement.placeRandomShips(buttons, 4, 3);

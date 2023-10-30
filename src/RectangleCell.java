@@ -1,9 +1,13 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.SplittableRandom;
+
 public class RectangleCell {
 
     private boolean isShip=false;
+    private boolean isActive=true;
+
     private Rectangle rectangelCell = new Rectangle(50, 50);
 
     //Konstruktor
@@ -41,6 +45,14 @@ public class RectangleCell {
 
     public void setRectangelCell(Rectangle rectangelCell) {
         this.rectangelCell = rectangelCell;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean active) {
+        isActive = active;
     }
 }
 
