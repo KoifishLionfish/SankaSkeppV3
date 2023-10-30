@@ -21,8 +21,7 @@ public class Board extends Application {
         primaryStage.setHeight(1000);
         primaryStage.setWidth(1000);
 
-        // Button[][] buttons = new Button[10][10];
-        Rectangle[][] rectangles = new Rectangle[10][10];
+        RectangleCell [][]rectangleCells=new RectangleCell[10][10];
 
         //Gridpane som placeras i mitten av fönstret med själva spelplanen
         GridPane pane = new GridPane();
@@ -31,34 +30,31 @@ public class Board extends Application {
         for (int i = 0; i < 10; i++) {
             count++;
             for (int j = 0; j < 10; j++) {
-                Rectangle rectangle = new Rectangle(50, 50);
-                rectangle.setStroke(Color.BLACK);
+               RectangleCell rectangleCell = new RectangleCell();
+                rectangleCells[i][j] = rectangleCell;
 
-                // buttons[i][j] = SeaGrid.SeaGridButton();
+                pane.add(rectangleCells[i][j].getRectangelCell(),i,j);
 
-                rectangles[i][j] = rectangle;
-
-                if (count % 2 == 0) {
-                    rectangle.setFill(Color.ROYALBLUE);
-                } else {
-                    rectangle.setFill(Color.ROYALBLUE);
-                }
-
-                if (rectangles[i][j].getFill() == Color.ORANGE){
-                    rectangle.setFill(Color.ORANGE);
-                }
-                pane.add(rectangle, j, i);
-                // pane.add(buttons[i][j], j, i);
                 count++;
             }
         }
-        // Button[][] shipButtons = ShipPlacement.placeRandomShips(buttons, 4, 3);
-        Ship.placeRandomShips(rectangles, 1, 1);
 
-        Ship.placeRandomShips(rectangles, 1, 2);
-        Ship.placeRandomShips(rectangles, 1, 3);
-        Ship.placeRandomShips(rectangles, 1, 4);
-        Ship.placeRandomShips(rectangles, 1, 5);
+
+
+
+
+
+
+
+
+
+        // Button[][] shipButtons = ShipPlacement.placeRandomShips(buttons, 4, 3);
+//        Ship.placeRandomShips(rectangleCells, 1, 1);
+//
+        Ship.placeRandomShips(rectangleCells, 2, 2);
+        Ship.placeRandomShips(rectangleCells, 1, 3);
+        Ship.placeRandomShips(rectangleCells, 1, 4);
+        Ship.placeRandomShips(rectangleCells, 1, 5);
 
         //skriver ut buttons listan för att se om den är rätt
         // for (int row = 0; row < 10; row++) {
