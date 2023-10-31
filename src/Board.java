@@ -55,6 +55,7 @@ public class Board extends Application {
     Ship.placeRandomShips(rectangleCells, 1, 3);
     Ship.placeRandomShips(rectangleCells, 1, 4);
     Ship.placeRandomShips(rectangleCells, 1, 5);
+    shoot(rectangleCells);
 
     //skriver ut buttons listan för att se om den är rätt
     // for (int row = 0; row < 10; row++) {
@@ -112,4 +113,35 @@ public class Board extends Application {
     primaryStage.show();
 
   }
+
+  // Shooting method
+  public void shoot(RectangleCell[][] rectangles) {
+    Random random = new Random();
+
+    int numberOfShots = 1;
+
+    for (int tries = 0; tries < numberOfShots; tries++) {
+      int x = random.nextInt(10);
+      int y = random.nextInt(10);
+      RectangleCell cell = rectangles[x][y];
+
+      // if shot misses
+      if (cell.getRectangelCell().getFill() == Color.ROYALBLUE) {
+        cell.getRectangelCell().setFill(Color.BLACK);
+        System.out.println("Shot missed at: " + cell.getRectangleId());
+      }
+      // if shot hits
+      else if (cell.getRectangelCell().getFill() == Color.ORANGE) {
+        cell.getRectangelCell().setFill(Color.RED);
+        System.out.println("Shot hit at: " + cell.getRectangleId());
+        tries--;
+      }
+      // if shot hits a previously hit rectangle, retry
+      else if (cell.getRectangelCell().getFill() == Color.BLACK || cell.getRectangelCell().getFill() == Color.RED) {
+        tries--;
+      }
+    }
+  }
+
+
 }
