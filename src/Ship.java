@@ -35,7 +35,7 @@ public class Ship {
                     rowRandom = rowRandom + 1;
                 }
                 rectangles[rowRandom][colRandom].setisShip(true);
-
+                System.out.println("Ship placed at: "+rectangles[rowRandom][colRandom].getRectangleId());
             }
 
         }

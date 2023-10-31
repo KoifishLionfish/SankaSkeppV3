@@ -7,6 +7,7 @@ public class RectangleCell {
 
     private boolean isShip=false;
     private boolean isActive=true;
+    private String rectangleId;
 
     private Rectangle rectangelCell = new Rectangle(50, 50);
 
@@ -53,6 +54,14 @@ public class RectangleCell {
 
     public void setIsActive(boolean active) {
         isActive = active;
+    }
+
+    public String getRectangleId() {
+        return rectangleId;
+    }
+
+    public void setRectangleId(String rectangleId) {
+        this.rectangleId = rectangleId;
     }
 }
 

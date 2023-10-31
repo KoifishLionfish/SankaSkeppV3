@@ -23,16 +23,27 @@ public class Board extends Application {
         primaryStage.setWidth(1000);
 
         RectangleCell[][] rectangleCells = new RectangleCell[10][10];
-
-
+//id för rektanglarna
+        char idChar;
+        int idNumber;
+        String rektangelId;
 
         //Gridpane som placeras i mitten av fönstret med själva spelplanen
         GridPane pane = new GridPane();
+
+
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 RectangleCell rectangleCell = new RectangleCell();
                 rectangleCells[i][j] = rectangleCell;
                 pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
+
+
+                //id för varje rektangel
+                idChar = (char) (65 + j);
+                idNumber = i;
+                rektangelId = String.valueOf(idChar) + idNumber;
+                rectangleCells[i][j].setRectangleId(rektangelId);
             }
         }
 
