@@ -16,10 +16,10 @@ public class RectangleCell {
     //färg för att det är ett skepp så ändrar man i get/set för boolean
     // för ex isSHip så när man sätter isShip=true, ändras färgen samtidigt
     public RectangleCell() {
+        rectangelCell = new Rectangle(50, 50);
         rectangelCell.setFill(Color.ROYALBLUE);
         rectangelCell.setStroke(Color.BLACK);
     }
-
 
 
     //Getters och Setters

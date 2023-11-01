@@ -6,43 +6,74 @@ public class Ship {
 
     static void placeRandomShips(RectangleCell[][] rectangles, int numberOfShips, int shipSize) {
 
+    static void placeRandomShips(RectangleCell[][] rectangles, int[] shipsPerSize) {
+        int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1};
         Random random = new Random();
 
-        for (int nrOfShip = 0; nrOfShip < numberOfShips; nrOfShip++) {
-            boolean directionRandom = random.nextBoolean();
-            // directionRandom om true så ligger skeppen horisontellt
+        for (int index = 0; index < shipSizes.length; index++) {
+            int shipSize = shipSizes[index];
+            int numberOfShips = (index < shipsPerSize.length) ? shipsPerSize[index] : 0;
 
-            int rowRandom;
-            int colRandom;
+            // Loopar igenom skeppen som ska placeras
+            for (int numOfShips = 0; numOfShips < numberOfShips; numOfShips++) {
+                // randomly väljer horizonalt och vertikalt
+                boolean directionRandom = random.nextBoolean();
+                // Initializerar variabler för att lagra de valda positionerna för skeppen
+                int rowRandom = 0;
+                int colRandom = 0;
+                //  kollar om skeppets position är tillåtet
+                boolean isValidPlacement = false;
 
-            //avgränsar hur långt randomInt kan gå så att skeppen inte
-            //riskeras att placeras utan för spelbrädet
-            if (directionRandom) {
-                rowRandom = random.nextInt(10);
-                colRandom = random.nextInt(10 - shipSize);
-            } else {
-                rowRandom = random.nextInt(10 - shipSize);
-                colRandom = random.nextInt(10);
-            }
+                // fortsätter leta efter en tillåten position tills de hittar en
+                while (!isValidPlacement) {
 
-            //Ökar row/col för att placera ut nästa del av skeppet
-            for (int i = 0; i < shipSize; i++) {
-                if (directionRandom) {
-                    rowRandom = rowRandom;
-                    colRandom = colRandom + 1;
-                } else {
-                    colRandom = colRandom;
-                    rowRandom = rowRandom + 1;
+                    // genererar random positoner inom spel brädan för skeppen beroende på deras riktning
+
+                    if (directionRandom) {
+                        rowRandom = random.nextInt(10);
+                        colRandom = random.nextInt(10 - shipSize);
+                    } else {
+                        rowRandom = random.nextInt(10 - shipSize);
+                        colRandom = random.nextInt(10);
+                    }
+
+                    // antar att positionen är tillåten tills den bli motbevisad (alltså om en hamnar på en annan tex)
+                    isValidPlacement = true;
+
+                    // kollar omgivning för andras skepp postitoner för att se om placeringen är tillåten
+                    for (int i = rowRandom - 1; i < rowRandom + shipSize + 1; i++) {
+                        for (int j = colRandom - 1; j < colRandom + shipSize + 1; j++) {
+                            // kollar så att cellerna är inom spel brädans gränser
+                            if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+                                // ifall en grann cell redan har ett skepp, så blir placeringen inte tillåten
+                                if (rectangles[i][j].getIsShip()) {
+                                    isValidPlacement = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!isValidPlacement) {
+                            break;
+                        }
+                    }
                 }
-                rectangles[rowRandom][colRandom].setisShip(true);
 
+
+                // placerar skepp i positioner som är tillåtna
+                for (int i = 0; i < shipSize; i++) {
+                    int row = directionRandom ? rowRandom : rowRandom + i;
+                    int col = directionRandom ? colRandom + i : colRandom;
+
+                    rectangles[row][col].setisShip(true);
+                }
             }
-
         }
     }
+}
 
 
-    public String getShipName() {
+
+   /* public String getShipName() {
         if (shipSize == 5) {
             shipName = "Hangarfartyg";
         } else if (shipSize == 4) {
@@ -65,39 +96,4 @@ public class Ship {
 
     public void setShipSize(int shipSize) {
         this.shipSize = shipSize;
-    }
-}
-
-
-//Det här är koden för att placera ut skepp innan vi hade egen klass för rektanglar och innan jag
-//la in att skepp hamnar åt random håll
-//public static Rectangle[][] placeRandomShips(Rectangle[][] rectangles, int numberOfShips, int shipSize) {
-//    Random random = new Random();
-//    int gridSize = rectangles.length;
-//
-//    for (int ship = 0; ship < numberOfShips; ship++) {
-//        int row = random.nextInt(gridSize);
-//        int col = random.nextInt(gridSize);
-//
-//        boolean canPlaceShip = true;
-//
-//        for (int i = 0; i < shipSize; i++) {
-//            if (col + i >= gridSize || rectangles[row][col + i].getFill() == Color.ORANGE) {
-//                canPlaceShip = false;
-//                break;
-//            }
-//        }
-//
-//        if (canPlaceShip) {
-//            for (int i = 0; i < shipSize; i++) {
-//                rectangles[row][col + i].setFill(Color.ORANGE);
-//            }
-//        } else {
-//            ship--;
-//        }
-//    }
-//    return rectangles;
-//}
-//}
-
-
+    }*/
