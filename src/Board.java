@@ -7,10 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.Button;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Board extends Application {
@@ -115,6 +112,7 @@ public class Board extends Application {
 
   }
 
+  //++ Fredrik L
   public void shoot(RectangleCell[][] rectangles) {
     Random random = new Random();
     int x = random.nextInt(10);
@@ -125,8 +123,6 @@ public class Board extends Application {
       shoot(rectangles);
     } else {
 
-      Direction previousDirection = Direction.UNKNOWN;
-
       // if shot misses
       if (isCellBlue(rectangles, x, y)) {
         makeCellBlack(rectangles, x, y);
@@ -136,7 +132,7 @@ public class Board extends Application {
       else if (isCellOrange(rectangles, x, y)) {
         makeCellRed(rectangles, x, y);
         System.out.println("Shot hit at: " + cell.getRectangleId());
-        aimRandomDirection(rectangles, x, y, previousDirection); // choose random direction
+        aimRandomDirection(rectangles, x, y); // choose random direction
       }
       // if shot hits a previously hit rectangle, retry
       else if (isCellRed(rectangles, x, y) || isCellBlack(rectangles, x, y)) {
@@ -147,15 +143,15 @@ public class Board extends Application {
 
   // followup shots if first hit is successful
   public void followUpShot(RectangleCell[][] rectangles, int x, int y, Direction previousDirection) {
-    RectangleCell cell = new RectangleCell();
+    RectangleCell cell = rectangles[x][y];
 
     // if hits, go to the same direction again
     if (isCellBlue(rectangles, x, y)) {
       makeCellBlack(rectangles, x, y);
-      System.out.println("miss at: " + cell.getRectangleId());
+      System.out.println("Shot missed at: " + cell.getRectangleId());
     } else if (isCellOrange(rectangles, x, y)) {
       makeCellRed(rectangles, x, y);
-      System.out.println("hit: " + cell.getRectangleId());
+      System.out.println("Shot hit at: " + cell.getRectangleId());
       if (previousDirection == Direction.UP) {
         aimUp(rectangles, x, y);
       } else if (previousDirection == Direction.RIGHT) {
@@ -169,59 +165,55 @@ public class Board extends Application {
   }
 
   // Choose random direction
-  public void aimRandomDirection(RectangleCell[][] rectangles, int x, int y, Direction previousDirection) {
+  public void aimRandomDirection(RectangleCell[][] rectangles, int x, int y) {
     Random random = new Random();
     int randomNr = random.nextInt(4)+1;
 
     if (randomNr == 1) {
-      System.out.println("up");
       aimUp(rectangles, x, y);
     } else if (randomNr == 2) {
-      System.out.println("right");
       aimRight(rectangles, x, y);
     } else if (randomNr == 3) {
-      System.out.println("down");
       aimDown(rectangles, x, y);
     } else {
-      System.out.println("left");
       aimLeft(rectangles, x, y);
     }
   }
 
   // Methods to choose direction
   public void aimUp(RectangleCell[][] rectangles, int x, int y) {
-    if (y - 1 > 0) {
+    if (y - 1 > -1 && !isCellRed(rectangles, x, y-1)) {
       y--;
       followUpShot(rectangles, x, y, Direction.UP);
     } else {
-      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+      aimRandomDirection(rectangles, x, y);
     }
   }
 
   public void aimRight(RectangleCell[][] rectangles, int x, int y) {
-    if (x + 1 < 10) {
+    if (x + 1 < 10 && !isCellRed(rectangles, x+1, y)) {
       x++;
       followUpShot(rectangles, x, y, Direction.RIGHT);
     } else {
-      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+      aimRandomDirection(rectangles, x, y);
     }
   }
 
   public void aimDown(RectangleCell[][] rectangles, int x, int y) {
-    if (y + 1 < 10) {
+    if (y + 1 < 10 && !isCellRed(rectangles, x, y+1)) {
       y++;
       followUpShot(rectangles, x, y, Direction.DOWN);
     } else {
-      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+      aimRandomDirection(rectangles, x, y);
     }
   }
 
   public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
-    if (x - 1 > 0) {
+    if (x - 1 > -1 && !isCellRed(rectangles, x-1, y)) {
       x--;
       followUpShot(rectangles, x, y, Direction.LEFT);
     } else {
-      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+      aimRandomDirection(rectangles, x, y);
     }
   }
 
@@ -257,4 +249,6 @@ public class Board extends Application {
     Rectangle cell = rectangles[x][y].getRectangelCell();
     return cell.getFill() == Color.BLACK;
   }
+
+  //-- Fredrik L
 }
