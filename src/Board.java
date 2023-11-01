@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Board extends Application {
@@ -114,34 +115,146 @@ public class Board extends Application {
 
   }
 
-  // Shooting method
   public void shoot(RectangleCell[][] rectangles) {
     Random random = new Random();
+    int x = random.nextInt(10);
+    int y = random.nextInt(10);
+    RectangleCell cell = rectangles[x][y];
 
-    int numberOfShots = 1;
+    if (!isCellOrange(rectangles, x, y)) {
+      shoot(rectangles);
+    } else {
 
-    for (int tries = 0; tries < numberOfShots; tries++) {
-      int x = random.nextInt(10);
-      int y = random.nextInt(10);
-      RectangleCell cell = rectangles[x][y];
+      Direction previousDirection = Direction.UNKNOWN;
 
       // if shot misses
-      if (cell.getRectangelCell().getFill() == Color.ROYALBLUE) {
-        cell.getRectangelCell().setFill(Color.BLACK);
+      if (isCellBlue(rectangles, x, y)) {
+        makeCellBlack(rectangles, x, y);
         System.out.println("Shot missed at: " + cell.getRectangleId());
       }
       // if shot hits
-      else if (cell.getRectangelCell().getFill() == Color.ORANGE) {
-        cell.getRectangelCell().setFill(Color.RED);
+      else if (isCellOrange(rectangles, x, y)) {
+        makeCellRed(rectangles, x, y);
         System.out.println("Shot hit at: " + cell.getRectangleId());
-        tries--;
+        aimRandomDirection(rectangles, x, y, previousDirection); // choose random direction
       }
       // if shot hits a previously hit rectangle, retry
-      else if (cell.getRectangelCell().getFill() == Color.BLACK || cell.getRectangelCell().getFill() == Color.RED) {
-        tries--;
+      else if (isCellRed(rectangles, x, y) || isCellBlack(rectangles, x, y)) {
+        shoot(rectangles);
       }
     }
   }
 
+  // followup shots if first hit is successful
+  public void followUpShot(RectangleCell[][] rectangles, int x, int y, Direction previousDirection) {
+    RectangleCell cell = new RectangleCell();
 
+    // if hits, go to the same direction again
+    if (isCellBlue(rectangles, x, y)) {
+      makeCellBlack(rectangles, x, y);
+      System.out.println("miss at: " + cell.getRectangleId());
+    } else if (isCellOrange(rectangles, x, y)) {
+      makeCellRed(rectangles, x, y);
+      System.out.println("hit: " + cell.getRectangleId());
+      if (previousDirection == Direction.UP) {
+        aimUp(rectangles, x, y);
+      } else if (previousDirection == Direction.RIGHT) {
+        aimRight(rectangles, x, y);
+      } else if (previousDirection == Direction.DOWN) {
+        aimDown(rectangles, x, y);
+      } else {
+        aimLeft(rectangles, x, y);
+      }
+    }
+  }
+
+  // Choose random direction
+  public void aimRandomDirection(RectangleCell[][] rectangles, int x, int y, Direction previousDirection) {
+    Random random = new Random();
+    int randomNr = random.nextInt(4)+1;
+
+    if (randomNr == 1) {
+      System.out.println("up");
+      aimUp(rectangles, x, y);
+    } else if (randomNr == 2) {
+      System.out.println("right");
+      aimRight(rectangles, x, y);
+    } else if (randomNr == 3) {
+      System.out.println("down");
+      aimDown(rectangles, x, y);
+    } else {
+      System.out.println("left");
+      aimLeft(rectangles, x, y);
+    }
+  }
+
+  // Methods to choose direction
+  public void aimUp(RectangleCell[][] rectangles, int x, int y) {
+    if (y - 1 > 0) {
+      y--;
+      followUpShot(rectangles, x, y, Direction.UP);
+    } else {
+      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+    }
+  }
+
+  public void aimRight(RectangleCell[][] rectangles, int x, int y) {
+    if (x + 1 < 10) {
+      x++;
+      followUpShot(rectangles, x, y, Direction.RIGHT);
+    } else {
+      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+    }
+  }
+
+  public void aimDown(RectangleCell[][] rectangles, int x, int y) {
+    if (y + 1 < 10) {
+      y++;
+      followUpShot(rectangles, x, y, Direction.DOWN);
+    } else {
+      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+    }
+  }
+
+  public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
+    if (x - 1 > 0) {
+      x--;
+      followUpShot(rectangles, x, y, Direction.LEFT);
+    } else {
+      aimRandomDirection(rectangles, x, y, Direction.UNKNOWN);
+    }
+  }
+
+
+  // Methods to easier make cell black and red
+  public void makeCellBlack(RectangleCell[][] rectangles, int x, int y) {
+    RectangleCell cell = rectangles[x][y];
+    cell.getRectangelCell().setFill(Color.BLACK);
+  }
+
+  public void makeCellRed(RectangleCell[][] rectangles, int x, int y) {
+    RectangleCell cell = rectangles[x][y];
+    cell.getRectangelCell().setFill(Color.RED);
+  }
+
+  // Check color of rectangle
+  public boolean isCellBlue (RectangleCell[][] rectangles, int x, int y) {
+    Rectangle cell = rectangles[x][y].getRectangelCell();
+    return cell.getFill() == Color.ROYALBLUE;
+  }
+
+  public boolean isCellOrange (RectangleCell[][] rectangles, int x, int y) {
+    Rectangle cell = rectangles[x][y].getRectangelCell();
+    return cell.getFill() == Color.ORANGE;
+  }
+
+  public boolean isCellRed (RectangleCell[][] rectangles, int x, int y) {
+    Rectangle cell = rectangles[x][y].getRectangelCell();
+    return cell.getFill() == Color.RED;
+  }
+
+  public boolean isCellBlack (RectangleCell[][] rectangles, int x, int y) {
+    Rectangle cell = rectangles[x][y].getRectangelCell();
+    return cell.getFill() == Color.BLACK;
+  }
 }
