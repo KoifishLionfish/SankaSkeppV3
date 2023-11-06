@@ -26,9 +26,9 @@ public class RectangleCell {
   //Getters och Setters
   public boolean getIsShip() {
     if (isShip){
-      rectangelCell.setFill(Color.ORANGE);
+      return rectangelCell.getFill() == Color.ORANGE;
     }
-    return isShip;
+    return false;
   }
 
   public void setisShip(boolean ship) {

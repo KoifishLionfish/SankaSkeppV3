@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Cannon {
+  private Direction previousDirection;
   private List<Integer> initialHitX = new ArrayList<>();
   private List<Integer> initialHitY = new ArrayList<>();
   private int shipLengthLeft = 0;
@@ -15,6 +16,7 @@ public class Cannon {
   private int shipLength = 0;
   private int numberOfSunkenShips = 0;
   private int nrOfHits = 0;
+  private String currentBattleShip = "";
 
   //++ Fredrik L
   public void shoot(RectangleCell[][] rectangles) {
@@ -42,13 +44,15 @@ public class Cannon {
 
   // THIS METHOD IS FOR TESTING ONLY
   public void forceHit(RectangleCell[][] rectangles) {
-    Random random = new Random();
-    int x = random.nextInt(10);
-    int y = random.nextInt(10);
-    RectangleCell cell = rectangles[x][y];
+
 
     // if no trackrecord exist
     if (initialHitX.isEmpty() && initialHitY.isEmpty()) {
+
+      Random random = new Random();
+      int x = random.nextInt(10);
+      int y = random.nextInt(10);
+      RectangleCell cell = rectangles[x][y];
 
       // FORCE HIT - THIS IS FOR TESTING ONLY
       if (!isCellOrange(rectangles, x, y)) {
@@ -68,17 +72,10 @@ public class Cannon {
           shipLength++;
 
           // Identifier
-          if (shipLength == 5) {
-            System.out.println("Type of Ship: Hangarship, 5 long");
-          } else if (shipLength == 4) {
-            System.out.println("Type of Ship: Slagskepp, 4 long");
-          } else if (shipLength == 3) {
-            System.out.println("Type of Ship: Kryssare, 3 long");
-          } else if (shipLength == 2) {
-            System.out.println("Type of Ship: Ubåt, 2 long");
-          }
+          identifyShip();
 
           makeCellRed(rectangles, x, y);
+          nrOfHits++;
 
           // add shot to list
           initialHitX.add(x);
@@ -93,8 +90,41 @@ public class Cannon {
         }
       }
     } else {
-      x = initialHitX.get(0);
-      y = initialHitY.get(0);
+      System.out.println("secondary");
+      int x = initialHitX.get(0);
+      int y = initialHitY.get(0);
+
+      if (isCellRed(rectangles, x, y)) {
+        //scanShipLength(rectangles, x, y);
+        //shipLength++;
+
+        //identifyShip();
+
+        System.out.println("its red");
+        System.out.println(previousDirection);
+
+      }
+
+
+
+
+    }
+  }
+
+  // identifier
+  public void identifyShip() {
+    if (shipLength == 5) {
+      System.out.println("Type of Ship: Hangarskepp, 5 long");
+      currentBattleShip = "Hangarskepp";
+    } else if (shipLength == 4) {
+      System.out.println("Type of Ship: Slagskepp, 4 long");
+      currentBattleShip = "Slagskepp";
+    } else if (shipLength == 3) {
+      System.out.println("Type of Ship: Kryssare, 3 long");
+      currentBattleShip = "Kryssare";
+    } else if (shipLength == 2) {
+      System.out.println("Type of Ship: Ubåt, 2 long");
+      currentBattleShip = "Ubåt";
     }
   }
 
@@ -192,10 +222,40 @@ public class Cannon {
       makeCellBlack(rectangles, x, y);
       System.out.println("Shot missed at: " + cell.getRectangleId());
 
+      if (nrOfHits == shipLength) {
+        initialHitY.remove(0);
+        initialHitX.remove(0);
+        System.out.println("You sunk my Battleship: " + currentBattleShip);
+        System.out.println("numberOfHits: " + nrOfHits);
+        nrOfHits = 0;
+        forceHit(rectangles);
+      } else {
+        System.out.println(nrOfHits);
+        forceHit(rectangles);
+      }
+
+      if (previousDirection == Direction.RIGHT && nrOfHits > 1 && shipLength > 0) {
+        previousDirection = Direction.LEFT;
+        System.out.println(previousDirection);
+      } else if (previousDirection == Direction.LEFT && nrOfHits > 1 && shipLength > 0) {
+        previousDirection = Direction.RIGHT;
+        System.out.println(previousDirection);
+      } else if (previousDirection == Direction.DOWN && nrOfHits > 1 && shipLength > 0) {
+        previousDirection = Direction.UP;
+        System.out.println(previousDirection);
+      } else if (previousDirection == Direction.UP && nrOfHits > 1 && shipLength > 0) {
+        previousDirection = Direction.DOWN;
+        System.out.println(previousDirection);
+      }
+
     } else if (isCellOrange(rectangles, x, y)) {
       makeCellRed(rectangles, x, y);
       System.out.println("Shot hit at: " + cell.getRectangleId());
       nrOfHits++;
+
+      if (nrOfHits == shipLength) {
+        forceHit(rectangles);
+      }
 
       if (previousDirection == Direction.UP) {
         aimUp(rectangles, x, y);
