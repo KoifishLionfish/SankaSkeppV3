@@ -8,7 +8,7 @@ public class RectangleCell {
     private boolean isShip=false;
     private boolean isActive=true;
 
-    private Rectangle rectangelCell = new Rectangle(50, 50);
+    private Rectangle rectangelCell;
 
     //Konstruktor
 
@@ -30,7 +30,7 @@ public class RectangleCell {
         return isShip;
     }
 
-    public void setisShip(boolean ship) {
+    public void setIsShip(boolean ship) {
         isShip = ship;
         if (isShip){
             rectangelCell.setFill(Color.ORANGE);
@@ -38,6 +38,7 @@ public class RectangleCell {
         else rectangelCell.setFill(Color.ROYALBLUE);
 
     }
+
 
     public Rectangle getRectangelCell() {
         return rectangelCell;
@@ -54,5 +55,7 @@ public class RectangleCell {
     public void setIsActive(boolean active) {
         isActive = active;
     }
+
+
 }
 

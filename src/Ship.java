@@ -4,73 +4,88 @@ public class Ship {
     private String shipName;
     private int shipSize;
 
-    static void placeRandomShips(RectangleCell[][] rectangles, int numberOfShips, int shipSize) {
-
-    static void placeRandomShips(RectangleCell[][] rectangles, int[] shipsPerSize) {
-        int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1};
+    static boolean placeRandomShips(RectangleCell[][] rectangles, int[] shipsPerSize) {
         Random random = new Random();
+        int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2};
+        int maxAttempts = 100;
 
         for (int index = 0; index < shipSizes.length; index++) {
             int shipSize = shipSizes[index];
             int numberOfShips = (index < shipsPerSize.length) ? shipsPerSize[index] : 0;
 
-            // Loopar igenom skeppen som ska placeras
             for (int numOfShips = 0; numOfShips < numberOfShips; numOfShips++) {
-                // randomly väljer horizonalt och vertikalt
-                boolean directionRandom = random.nextBoolean();
-                // Initializerar variabler för att lagra de valda positionerna för skeppen
-                int rowRandom = 0;
-                int colRandom = 0;
-                //  kollar om skeppets position är tillåtet
-                boolean isValidPlacement = false;
+                boolean placed = false;
+                int attempts = 0;
 
-                // fortsätter leta efter en tillåten position tills de hittar en
-                while (!isValidPlacement) {
+                while (!placed && attempts < maxAttempts) {
+                    boolean directionRandom = random.nextBoolean();
+                    int rowRandom = 0;
+                    int colRandom = 0;
+                    boolean isValidPlacement = false;
 
-                    // genererar random positoner inom spel brädan för skeppen beroende på deras riktning
+                    while (!isValidPlacement) {
+                        if (directionRandom) {
+                            rowRandom = random.nextInt(10);
+                            colRandom = random.nextInt(10 - shipSize);
+                        } else {
+                            rowRandom = random.nextInt(10 - shipSize);
+                            colRandom = random.nextInt(10);
+                        }
+                        isValidPlacement = true;
 
-                    if (directionRandom) {
-                        rowRandom = random.nextInt(10);
-                        colRandom = random.nextInt(10 - shipSize);
-                    } else {
-                        rowRandom = random.nextInt(10 - shipSize);
-                        colRandom = random.nextInt(10);
-                    }
+                        boolean hasAdjacent = false;
 
-                    // antar att positionen är tillåten tills den bli motbevisad (alltså om en hamnar på en annan tex)
-                    isValidPlacement = true;
-
-                    // kollar omgivning för andras skepp postitoner för att se om placeringen är tillåten
-                    for (int i = rowRandom - 1; i < rowRandom + shipSize + 1; i++) {
-                        for (int j = colRandom - 1; j < colRandom + shipSize + 1; j++) {
-                            // kollar så att cellerna är inom spel brädans gränser
-                            if (i >= 0 && i < 10 && j >= 0 && j < 10) {
-                                // ifall en grann cell redan har ett skepp, så blir placeringen inte tillåten
-                                if (rectangles[i][j].getIsShip()) {
-                                    isValidPlacement = false;
-                                    break;
+                        for (int i = rowRandom - 1; i < rowRandom + shipSize + 1; i++) {
+                            for (int j = colRandom - 1; j < colRandom + shipSize + 1; j++) {
+                                if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+                                    if (rectangles[i][j].getIsShip()) {
+                                        hasAdjacent = true;
+                                        break;
+                                    }
                                 }
                             }
+                            if (hasAdjacent) {
+                                isValidPlacement = false;
+                                break;
+                            }
                         }
-                        if (!isValidPlacement) {
-                            break;
+
+                        if (isValidPlacement) {
+                            for (int i = 0; i < shipSize; i++) {
+                                int row = directionRandom ? rowRandom : rowRandom + i;
+                                int col = directionRandom ? colRandom + i : colRandom;
+                                rectangles[row][col].setIsShip(true);
+                            }
+                            placed = true;
                         }
+                    }
+
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        System.out.println("Failed to place ship of size " + shipSize + " after " + attempts + " attempts.");
                     }
                 }
 
-
-                // placerar skepp i positioner som är tillåtna
-                for (int i = 0; i < shipSize; i++) {
-                    int row = directionRandom ? rowRandom : rowRandom + i;
-                    int col = directionRandom ? colRandom + i : colRandom;
-
-                    rectangles[row][col].setisShip(true);
+                if (!placed) {
+                    resetBoard(rectangles);
+                    System.out.println("Failed to place ship " + (numOfShips + 1) + " of size " + shipSize);
+                    return false;
                 }
+            }
+        }
+        return true;
+    }
+
+    private static void resetBoard(RectangleCell[][] rectangles) {
+        for (int i = 0; i < rectangles.length; i++) {
+            for (int j = 0; j < rectangles[i].length; j++) {
+                rectangles[i][j].setIsShip(false);
             }
         }
     }
 }
 
+// Jacob D
 
 
    /* public String getShipName() {

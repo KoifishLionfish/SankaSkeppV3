@@ -3,7 +3,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
@@ -12,28 +11,33 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
         primaryStage.setTitle("Battleships");
         primaryStage.setHeight(1000);
         primaryStage.setWidth(1000);
 
         RectangleCell[][] rectangleCells = new RectangleCell[10][10];
 
+        initializeBoard(rectangleCells);
 
+        int[] shipsPerSize = {1,1,1,1,1,1,1,1,1,1};
 
-        //Gridpane som placeras i mitten av fönstret med själva spelplanen
+        boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
+
+        // Gridpane to hold the game cells
         GridPane pane = new GridPane();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                RectangleCell rectangleCell = new RectangleCell();
-                rectangleCells[i][j] = rectangleCell;
                 pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
             }
         }
-        Ship.placeRandomShips(rectangleCells, new int[]{1,1,1,1,1,1}); // Place 1 ship of size 2, 3, 4, and 5
 
+        if (success) {
+            System.out.println("Ships placed successfully!");
+        } else {
+            System.out.println("Failed to place ships.");
+        }
 
-        //En hBox som läggs högst upp i fönstret (med position)
+        // HBox for the top labels
         HBox hbox = new HBox();
         hbox.setSpacing(0);
         Label emptyLabel = new Label();
@@ -41,7 +45,6 @@ public class Board extends Application {
         hbox.getChildren().add(emptyLabel);
         for (int i = 0; i < 10; i++) {
             String place = "";
-
             Label l = new Label();
             l.setAlignment(Pos.CENTER_LEFT);
             l.setPrefSize(50, 50);
@@ -51,7 +54,7 @@ public class Board extends Application {
             hbox.getChildren().addAll(l);
         }
 
-        //En vBox som läggslängst till vänster i fönstret (med position)
+        // VBox for the side labels
         VBox vbox = new VBox();
         vbox.setSpacing(0);
         for (int i = 0; i < 10; i++) {
@@ -65,8 +68,7 @@ public class Board extends Application {
             vbox.getChildren().add(l);
         }
 
-
-        //Skapar en borderpane och placerar in vår Gridpane, V&HBox
+        // BorderPane to structure the layout
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(hbox);
         borderPane.setLeft(vbox);
@@ -75,6 +77,13 @@ public class Board extends Application {
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
 
+    private static void initializeBoard(RectangleCell[][] rectangles) {
+        for (int i = 0; i < rectangles.length; i++) {
+            for (int j = 0; j < rectangles[i].length; j++) {
+                rectangles[i][j] = new RectangleCell();
+            }
+        }
     }
 }
