@@ -24,6 +24,7 @@ public class Ship {
                     boolean isValidPlacement = false;
 
                     while (!isValidPlacement) {
+                        // Generera slumpmässig rad och kolumn för skeppsplacering
                         if (directionRandom) {
                             rowRandom = random.nextInt(10);
                             colRandom = random.nextInt(10 - shipSize);
@@ -35,6 +36,7 @@ public class Ship {
 
                         boolean hasAdjacent = false;
 
+                        // Kontrollera för intilliggande skeppsplaceringar
                         for (int i = rowRandom - 1; i < rowRandom + shipSize + 1; i++) {
                             for (int j = colRandom - 1; j < colRandom + shipSize + 1; j++) {
                                 if (i >= 0 && i < 10 && j >= 0 && j < 10) {
@@ -50,6 +52,7 @@ public class Ship {
                             }
                         }
 
+                        // Placera skeppet på spelplanen om platsen är giltig
                         if (isValidPlacement) {
                             for (int i = 0; i < shipSize; i++) {
                                 int row = directionRandom ? rowRandom : rowRandom + i;
@@ -62,13 +65,14 @@ public class Ship {
 
                     attempts++;
                     if (attempts >= maxAttempts) {
-                        System.out.println("Failed to place ship of size " + shipSize + " after " + attempts + " attempts.");
+                        System.out.println("Misslyckades med att placera skepp av storlek " + shipSize + " efter " + attempts + " försök.");
                     }
                 }
 
+                // Återställ spelplanen om ett skepp inte kan placeras
                 if (!placed) {
                     resetBoard(rectangles);
-                    System.out.println("Failed to place ship " + (numOfShips + 1) + " of size " + shipSize);
+                    System.out.println("Misslyckades med att placera skepp " + (numOfShips + 1) + " av storlek " + shipSize);
                     return false;
                 }
             }
@@ -76,6 +80,7 @@ public class Ship {
         return true;
     }
 
+    // Återställ spelplanen till sitt ursprungliga tillstånd
     private static void resetBoard(RectangleCell[][] rectangles) {
         for (int i = 0; i < rectangles.length; i++) {
             for (int j = 0; j < rectangles[i].length; j++) {
@@ -84,6 +89,7 @@ public class Ship {
         }
     }
 }
+
 
 // Jacob D
 
