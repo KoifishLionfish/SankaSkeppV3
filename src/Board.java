@@ -19,8 +19,8 @@ public class Board extends Application {
 
 
         primaryStage.setTitle("Battleships");
-        primaryStage.setHeight(1000);
-        primaryStage.setWidth(1000);
+        primaryStage.setHeight(650);
+        primaryStage.setWidth(600);
 
         RectangleCell[][] rectangleCells = new RectangleCell[10][10];
 //id för rektanglarna
