@@ -24,11 +24,28 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 
-        ServerClient serverClient = new ServerClient();
+
 
         StartingBoard startingBoard = new StartingBoard();
         startingBoard.start(new Stage());
-        serverClient.startGame();
+
+//
+//        System.out.println(startingBoard.getServer());
+//        if (startingBoard.getServer()){
+//            System.out.println("Här");
+//            Server server=new Server();
+//            server.start();
+//        }
+//        else {
+//            System.out.println("eller här?");
+//            Client client=new Client();
+//            client.start();
+//
+//        }
+
+
+//        ServerClient serverClient = new ServerClient();
+//        serverClient.startGame();
 
 
 //serverClient.boardStart();
