@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerClient extends Thread{
+public class ServerClient extends Thread {
 
     BufferedReader reader;
     PrintWriter writer;
@@ -12,7 +12,7 @@ public class ServerClient extends Thread{
     private int startConnection;
     StartingBoard startingBoard;
 
-private boolean server;
+    private boolean server;
 
 
     @Override
@@ -22,7 +22,8 @@ private boolean server;
 
     public void startGame(boolean server) {
 
-
+//startar upp ett bräde
+// (ev lägga till så man ändrar viss text på brädet om server/klient)
         Board battelBoard = new Board();
         try {
             battelBoard.start(new Stage());
@@ -30,12 +31,13 @@ private boolean server;
             throw new RuntimeException(e);
         }
 
+
+        //Startar upp server/client beroende på val
         try {
-            System.out.println(server);
             if (!server) {
-                System.out.println("här client");
-                //client
+                //CLIENT**********************************************************************
                 //Skapa connection mellan klient och server
+
                 Socket socket = new Socket("localhost", 8080);
                 System.out.println("Connected to server");
                 //för att ta emot och hantera data vi får från servern
@@ -46,37 +48,27 @@ private boolean server;
                 OutputStream outputStream = socket.getOutputStream();
                 writer = new PrintWriter(outputStream, true);
 
-                System.out.println("är vi här");
-
 
                 while (gameIsRunning) {
-                    System.out.println("test igen");
 
-                    System.out.println("You are client but choose server");
+                    //client
                     //börja gissa alltså skicka iväg data
 
-                    System.out.println("fösta spelare client");
+                    //Vänta på/ta emot svar om miss/träff
 
+                    //om träff skjut igen ha kvar hit som true
+                    //skicka tillbaka svar
 
-                  /*while (hit){
+                    //om miss vänta på svar från servern och
+                    // sätt hit till false
 
-                        //Vänta på/ta emot svar om miss/träff
-
-                        //om träff skjut igen ha kvar hit som true
-                        //skicka tillbaka svar
-
-
-
-                        //om miss vänta på svar från servern och
-                        sätt hit till false
-
-                 }*/
 
                     gameIsRunning = false;
                 }
+
+
             } else {
-                System.out.println("här? server");
-                //Server
+                //SERVER**********************************************************************
                 //skapa connection mellan client och server
                 ServerSocket serverSocket = new ServerSocket(8080);
                 System.out.println("Waiting for client");
@@ -92,36 +84,22 @@ private boolean server;
                 OutputStream output = socket.getOutputStream();
                 writer = new PrintWriter(output, true);
 
-                System.out.println("eller här");
+                while (gameIsRunning) {
+                    //server
+                    //börjar med att vänta på gissning från clienten
+                    //hantera den
 
-                while (gameIsRunning
-//                        && startingBoard.getStartGame()
-                ) {
-                    System.out.println("hur långt har vi kommit?");
-                    if (startingBoard.getServer()) {
-                        System.out.println("You are the server and will start the game");
-                        gameIsRunning = false;
-                    } else {
-                        System.out.println("You are still in the server but choose client");
-                        //Börja ta emot ginning från clienten
-                        //hantera den
+                    //skicka tillbaka meddelande om miss/träff
 
-
-                        //skicka tillbaka meddelande om miss/träff
-
-
-                        gameIsRunning = false;
-                    }
-
+                    gameIsRunning = false;
                 }
-
             }
 
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
 

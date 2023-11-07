@@ -24,7 +24,6 @@ import java.util.Random;
 
 public class StartingBoard extends Application {
     private boolean server;
-    private boolean startGame;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -51,87 +50,39 @@ public class StartingBoard extends Application {
         Button buttonClient = new Button("Client");
         Button buttonStart = new Button("Start game");
 
+
+        //startknappen inaktiv innan man valt server/klient
+        //När man trycker på startknappen skapas en server/klient
+        //och den startas upp
+        //start fönstret stängs och det nya fönstret öppnas ifrån server/client klassen
+        buttonStart.setDisable(true);
+        buttonStart.setOnAction(event -> {
+
+                    System.out.println("is server: " + server);
+                    ServerClient serverClient = new ServerClient();
+                    serverClient.startGame(getServer());
+                    primaryStage.close();
+                }
+        );
+
+
         buttonServer.setOnAction(event -> {
             server = true;
             buttonStart.setDisable(false);
         });
+
 
         buttonClient.setOnAction(event -> {
             server = false;
             buttonStart.setDisable(false);
         });
 
-        buttonStart.setDisable(true);
-        buttonStart.setOnAction(event -> {
-            setStartGame(true);
-
-            System.out.println("is server: "+server);
-
-            ServerClient serverClient=new ServerClient();
-            serverClient.startGame(getServer());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//            if (getServer()){
-//                System.out.println("Här");
-//                Server server=new Server();
-//                server.start();
-//            }
-//            else {
-//                System.out.println("eller här?");
-//                Client client=new Client();
-//                client.start();
-//
-//            }
-
-                    primaryStage.close();
-//                    Board battelBoard = new Board();
-//                    try {
-//                        battelBoard.start(new Stage());
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
-//                    }
-                }
-
-
-
-        );
-
-
         Button buttonQuit = new Button("Quit Game");
         buttonQuit.setOnAction(event -> {
                     primaryStage.close();
-
                 }
         );
+
 
 
         HBox hBoxCenter = new HBox();
@@ -147,21 +98,11 @@ public class StartingBoard extends Application {
     }
 
 
-
-
     public boolean getServer() {
         return server;
     }
 
     public void setServer(boolean firstPlayer) {
         this.server = firstPlayer;
-    }
-
-    public boolean getStartGame() {
-        return startGame;
-    }
-
-    public void setStartGame(boolean startGame) {
-        this.startGame = startGame;
     }
 }
