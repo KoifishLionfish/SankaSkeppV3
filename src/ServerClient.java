@@ -6,7 +6,6 @@ import java.net.Socket;
 
 public class ServerClient extends Thread{
 
-
     BufferedReader reader;
     PrintWriter writer;
     private boolean gameIsRunning = true;
