@@ -18,6 +18,7 @@ public class Board extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 
+
         primaryStage.setTitle("Battleships");
         primaryStage.setHeight(650);
         primaryStage.setWidth(600);

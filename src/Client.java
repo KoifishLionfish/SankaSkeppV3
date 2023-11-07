@@ -21,6 +21,7 @@ public class Client extends Thread  {
     }
 
 
+
     public void boardStart() throws Exception {
    startingBoard=new StartingBoard();
    startingBoard.start(new Stage());

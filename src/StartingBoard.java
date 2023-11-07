@@ -99,6 +99,7 @@ public class StartingBoard extends Application {
 
 
 
+
 //            if (getServer()){
 //                System.out.println("Här");
 //                Server server=new Server();

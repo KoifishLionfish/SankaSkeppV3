@@ -25,4 +25,6 @@ public class Main extends Application {
         StartingBoard startingBoard = new StartingBoard();
         startingBoard.start(new Stage());
     }
+
+
 }

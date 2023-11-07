@@ -29,6 +29,7 @@ StartingBoard startingBoard= new StartingBoard();
     }
 
 
+
     public void startGame() {
         try {
             //skapa connection mellan client och server

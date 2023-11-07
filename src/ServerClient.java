@@ -14,6 +14,7 @@ public class ServerClient extends Thread{
 
 private boolean server;
 
+
     @Override
     public void run() {
         startGame(server);
