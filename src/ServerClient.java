@@ -63,6 +63,7 @@ public class ServerClient extends Thread {
                     // sätt hit till false
 
 
+
                     gameIsRunning = false;
                 }
 
