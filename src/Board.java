@@ -35,7 +35,7 @@ public class Board extends Application {
 
     if (success) {
       System.out.println("Ships placed successfully!");
-      cannon.forceHit(rectangleCells);
+      cannon.randomShot(rectangleCells);
     } else {
       System.out.println("Failed to place ships.");
     }
