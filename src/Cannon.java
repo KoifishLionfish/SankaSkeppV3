@@ -13,7 +13,7 @@ public class Cannon {
   private int shipLength = 0;
   private int numberOfSunkenShips = 0;
   private int nrOfHits = 0;
-  private final int NUMBER_OF_SHIPS = 6;
+  private final int NUMBER_OF_SHIPS = 10;
 
 
   // random shot
