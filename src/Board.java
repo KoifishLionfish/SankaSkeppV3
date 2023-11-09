@@ -27,6 +27,7 @@ public class Board extends Application {
 
     // Gridpane to hold the game cells
     GridPane pane = new GridPane();
+    // gammalt
     for (int i = 0; i < 10; i++) {
       for (int j = 0; j < 10; j++) {
         pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
