@@ -448,12 +448,13 @@ public class Cannon {
 
   public void cannonBall(RectangleCell[][] rectangles, int x, int y) {
     Rectangle cell = rectangles[x][y].getRectangelCell();
+    String cellId = rectangles[x][y].getRectangleId();
     if (isAShip(rectangles, x, y)) {
       cell.setFill(Color.RED);
-      System.out.println("Shot hit at coords x" + x + ", y" + y);
+      System.out.println("Shot hit at: " + cellId);
     } else {
       cell.setFill(Color.BLACK);
-      System.out.println("Shot missed at coords x" + x + ", y" + y);
+      System.out.println("Shot missed at: " + cellId);
     }
   }
 

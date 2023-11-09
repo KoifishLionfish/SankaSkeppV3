@@ -15,19 +15,40 @@ public class Board extends Application {
     primaryStage.setHeight(1000);
     primaryStage.setWidth(1000);
 
+    char idChar;
+    int idNumber;
+    String rektangelId;
+
     RectangleCell[][] rectangleCells = new RectangleCell[10][10];
 
     initializeBoard(rectangleCells);
 
-    int[] shipsPerSize = {1,1,1,1,1,1,1,1,1,1};
+    int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
     boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
 
     // Gridpane to hold the game cells
     GridPane pane = new GridPane();
+        /*
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
+            }
+        }*/
+
     for (int i = 0; i < 10; i++) {
+
       for (int j = 0; j < 10; j++) {
+        // RectangleCell rectangleCell = new RectangleCell();
+        // rectangleCells[i][j] = rectangleCell;
         pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
+
+
+        //id för varje rektangel
+        idChar = (char) (65 + j);
+        idNumber = i;
+        rektangelId = String.valueOf(idChar) + idNumber;
+        rectangleCells[i][j].setRectangleId(rektangelId);
       }
     }
 
