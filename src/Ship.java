@@ -90,6 +90,7 @@ public class Ship {
                     }
                 }
                 placed = true;
+                deactivateNeighboringCells(rectangles, rowRandom, colRandom, shipSize, directionRandom);
             }
 
             attempts++;
@@ -108,7 +109,34 @@ public class Ship {
             }
         }
     }
+
+    private static void deactivateNeighboringCells(RectangleCell[][] rectangles, int row, int col, int shipSize, boolean direction) {
+        for (int i = Math.max(0, row - 1); i < Math.min(10, row + shipSize + 1); i++) {
+            for (int j = Math.max(0, col - 1); j < Math.min(10, col + 2); j++) {
+                rectangles[i][j].setIsActive(false);
+            }
+        }
+
+        // Extra logik för att deaktivera celler runt skeppet
+        if (direction) {
+            // Om skeppet placeras horisontellt
+            for (int i = Math.max(0, row - 1); i < Math.min(10, row + 2); i++) {
+                for (int j = Math.max(0, col - 1); j < Math.min(10, col + shipSize + 1); j++) {
+                    rectangles[i][j].setIsActive(false);
+                }
+            }
+        } else {
+            // Om skeppet placeras vertikalt
+            for (int i = Math.max(0, row - 1); i < Math.min(10, row + shipSize + 1); i++) {
+                for (int j = Math.max(0, col - 1); j < Math.min(10, col + 2); j++) {
+                    rectangles[i][j].setIsActive(false);
+                }
+            }
+        }
+
+    }
 }
+
 
 
 // Jacob D
