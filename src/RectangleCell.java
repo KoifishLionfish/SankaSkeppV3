@@ -9,7 +9,7 @@ public class RectangleCell {
     private boolean isActive=true;
     private String rectangleId;
 
-    private Rectangle rectangelCell = new Rectangle(50, 50);
+    private Rectangle rectangelCell = new Rectangle(25, 25);
 
     //Konstruktor
 
@@ -27,11 +27,13 @@ public class RectangleCell {
     public boolean getIsShip() {
         if (isShip){
             rectangelCell.setFill(Color.ORANGE);
+
         }
+
         return isShip;
     }
 
-    public void setisShip(boolean ship) {
+    public void setIsShip(boolean ship) {
         isShip = ship;
         if (isShip){
             rectangelCell.setFill(Color.ORANGE);

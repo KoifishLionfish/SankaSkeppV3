@@ -21,6 +21,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
+//Board board=new Board();
+//board.start(new Stage());
+//
+//
+//        Board oard = new Board();
+//        try {
+//            oard.startBoard(new Stage(), "titel");
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+         //
+
+
+        //den som är för att starta från startboard och med serverklient
         StartingBoard startingBoard = new StartingBoard();
         startingBoard.start(new Stage());
     }

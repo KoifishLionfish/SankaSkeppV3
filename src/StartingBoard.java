@@ -1,13 +1,12 @@
 import javafx.application.Application;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.awt.*;
 
 import javafx.scene.control.Label;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -29,39 +28,49 @@ public class StartingBoard extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("Start battleship");
-        primaryStage.setHeight(500);
-        primaryStage.setWidth(500);
-
-        AnchorPane anchorpane = new AnchorPane();
+        primaryStage.setHeight(450);
+        primaryStage.setWidth(400);
 
 
-        //Lägger till högst upp
+        VBox mainVbox = new VBox();
+        mainVbox.setAlignment(Pos.CENTER);
+        mainVbox.setSpacing(20);
+
+
+        //Lägger till högst upp i mainvbox
         Label welcome = new Label("Welcome to battleship");
         welcome.setTextFill(Color.ROYALBLUE);
-        welcome.setFont(Font.font(18));
-
-        HBox hBoxTop = new HBox();
-        hBoxTop.getChildren().add(welcome);
-        AnchorPane.setTopAnchor(welcome, 20.0);
+        welcome.setFont(Font.font("Lucida Calligraphy", 30));
 
 
-        //lägger till mitt i
+        Label select = new Label("Select Server or Client to start the game");
+        select.setFont(Font.font("Lucida Calligraphy", 14));
+
+        //lägger till i buttonvbox
         Button buttonServer = new Button("Server");
         Button buttonClient = new Button("Client");
         Button buttonStart = new Button("Start game");
 
 
+        buttonServer.setShape(new Circle(1.5));
         //startknappen inaktiv innan man valt server/klient
         //När man trycker på startknappen skapas en server/klient
-        //och den startas upp
         //start fönstret stängs och det nya fönstret öppnas ifrån server/client klassen
         buttonStart.setDisable(true);
         buttonStart.setOnAction(event -> {
-
-                    System.out.println("is server: " + server);
-                    ServerClient serverClient = new ServerClient();
-                    serverClient.startGame(getServer());
                     primaryStage.close();
+                    System.out.println("is server: " + server);
+                    ServerClient serverClient = new ServerClient(server);
+                    serverClient.start();
+
+//
+//                Board battelBoard = new Board();
+//                try {
+//                    battelBoard.start(new Stage());
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+
                 }
         );
 
@@ -77,22 +86,21 @@ public class StartingBoard extends Application {
             buttonStart.setDisable(false);
         });
 
+
         Button buttonQuit = new Button("Quit Game");
         buttonQuit.setOnAction(event -> {
                     primaryStage.close();
                 }
         );
 
+        VBox vBoxButtons = new VBox();
+        vBoxButtons.getChildren().addAll(buttonServer, buttonClient, buttonStart, buttonQuit);
+        vBoxButtons.setAlignment(Pos.CENTER);
+        vBoxButtons.setSpacing(15);
 
+        mainVbox.getChildren().addAll(welcome, select, vBoxButtons);
 
-        HBox hBoxCenter = new HBox();
-        hBoxCenter.getChildren().addAll(buttonServer, buttonClient, buttonStart, buttonQuit);
-
-        anchorpane.getChildren().addAll(hBoxTop, hBoxCenter);
-        AnchorPane.setTopAnchor(hBoxTop, 20.0);
-        AnchorPane.setBottomAnchor(hBoxCenter, 20.0);
-
-        Scene scene = new Scene(anchorpane);
+        Scene scene = new Scene(mainVbox);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -102,7 +110,7 @@ public class StartingBoard extends Application {
         return server;
     }
 
-    public void setServer(boolean firstPlayer) {
-        this.server = firstPlayer;
+    public void setServer(boolean server) {
+        this.server = server;
     }
 }
