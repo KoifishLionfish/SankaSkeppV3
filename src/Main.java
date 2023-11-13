@@ -22,23 +22,28 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
-//Board board=new Board();
-//board.start(new Stage());
-//
-//
-//        Board oard = new Board();
-//        try {
-//            oard.startBoard(new Stage(), "titel");
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-         //
-
-
-        //den som är för att starta från startboard och med serverklient
         StartingBoard startingBoard = new StartingBoard();
         startingBoard.start(new Stage());
+    }
+
+
+    //Använde för att dela sträng på rätt ställe och omvandla till int
+    //Kan bara strunta i den
+    public void test() {
+
+        String incomingGuess = "m A1 Guess 3,5";
+
+        String guess = incomingGuess.substring(11);
+        String[] stringXY = guess.split(",");
+        int x = Integer.parseInt(stringXY[0]);
+        int y = Integer.parseInt(stringXY[1]);
+
+
+//    String x=stringXY [0];
+//    String y=stringXY[1];
+        System.out.println(x);
+        System.out.println(y);
+
     }
 
 

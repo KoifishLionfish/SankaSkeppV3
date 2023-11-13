@@ -61,7 +61,14 @@ public class StartingBoard extends Application {
                     primaryStage.close();
                     System.out.println("is server: " + server);
                     ServerClient serverClient = new ServerClient(server);
-                    serverClient.start();
+                    try {
+                        serverClient.run();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+
 
 //
 //                Board battelBoard = new Board();

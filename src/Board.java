@@ -15,6 +15,7 @@ import java.util.Random;
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
+    private String textLable="osifdhsf";
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
@@ -22,7 +23,7 @@ public class Board extends Application {
 
         primaryStage.setTitle(titel);
         primaryStage.setHeight(350);
-        primaryStage.setWidth(625);
+        primaryStage.setWidth(700);
 
         rectangleCells = new RectangleCell[10][10];
 //id för rektanglarna
@@ -166,6 +167,14 @@ public class Board extends Application {
         }
 
 
+
+        //vbox för utskrivt med sake
+        VBox vboxText=new VBox();
+        Label labelText=new Label(textLable);
+        vboxText.getChildren().add(labelText);
+
+
+
         BorderPane borderPaneEnemy = new BorderPane();
 
         borderPaneEnemy.setTop(hboxEnemy);
@@ -174,7 +183,7 @@ public class Board extends Application {
 
 
         HBox hBoxTotal = new HBox();
-        hBoxTotal.getChildren().addAll(borderPane, borderPaneEnemy);
+        hBoxTotal.getChildren().addAll(borderPane, borderPaneEnemy,vboxText);
         hBoxTotal.setSpacing(10);
 
         Scene scene = new Scene(hBoxTotal);
@@ -195,6 +204,15 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+    }
+
+
+    public String getTextLable() {
+        return textLable;
+    }
+
+    public void setTextLable(String textLable) {
+        this.textLable = textLable;
     }
 }
 
