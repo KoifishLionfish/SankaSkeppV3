@@ -27,7 +27,6 @@ public class RectangleCell {
     public boolean getIsShip() {
         if (isShip){
             rectangelCell.setFill(Color.ORANGE);
-
         }
 
         return isShip;

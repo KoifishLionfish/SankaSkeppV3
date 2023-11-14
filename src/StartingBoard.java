@@ -66,18 +66,6 @@ public class StartingBoard extends Application {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-
-
-
-
-//
-//                Board battelBoard = new Board();
-//                try {
-//                    battelBoard.start(new Stage());
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
-
                 }
         );
 
