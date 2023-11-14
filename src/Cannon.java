@@ -9,9 +9,12 @@ import java.util.Random;
 public class Cannon {
   private final List<Integer> initialHitX = new ArrayList<>();
   private final List<Integer> initialHitY = new ArrayList<>();
+  private final List<Integer> latestShotX = new ArrayList<>();
+  private final List<Integer> latestShotY = new ArrayList<>();
   private final List<Integer> currentShipX = new ArrayList<>();
   private final List<Integer> currentShipY = new ArrayList<>();
   private String currentShip = "";
+  private String previousDirection = "";
   private int shipLength = 0;
   private int numberOfSunkenShips = 0;
   private int nrOfHits = 0;
@@ -20,6 +23,8 @@ public class Cannon {
   private boolean isShipVertical = false;
   private int horizontalRectangles = 0;
   private int verticalRectangles = 0;
+  private int totalMisses = 0;
+  private boolean previousHit = false;
 
 
   // random shot
@@ -37,7 +42,7 @@ public class Cannon {
         cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
 
         if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) {
-          randomShot(rectangles); // if first hit is miss - shoot again
+          totalMisses++;
         } else if (isHit(rectangles, x, y)) {
           nrOfHits++; // register hit
 
@@ -56,7 +61,7 @@ public class Cannon {
           System.out.println("Vertical: " + isShipVertical);
           typeOfShip(); // writes what type of ship it is to check for errors
 
-          aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
+          //aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
         }
       } else {
         randomShot(rectangles); // if cell is black or red(hit), shoot again
@@ -65,12 +70,29 @@ public class Cannon {
 
       // if battleship isnt sunk
       // if list is not empty go back to initial shot:
-      x = initialHitX.get(0);
-      y = initialHitY.get(0);
 
-//      deactivateBlock(rectangles, x, y); // deactivate cells on the sides if they arent black.
 
-      aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
+      if (previousHit) {
+        x = latestShotX.get(0);
+        y = latestShotY.get(0);
+
+        if (previousDirection.contains("RIGHT")) {
+          followUpShot(rectangles, x, y, Direction.RIGHT);
+        } else if (previousDirection.contains("LEFT")) {
+          followUpShot(rectangles,x , y, Direction.LEFT);
+        } else if (previousDirection.contains("UP")) {
+          followUpShot(rectangles, x, y, Direction.UP);
+        } else if (previousDirection.contains("DOWN")) {
+          followUpShot(rectangles, x, y, Direction.DOWN);
+        }
+      } else {
+        x = initialHitX.get(0);
+        y = initialHitY.get(0);
+
+        aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
+      }
+
+
     }
   }
 
@@ -111,9 +133,12 @@ public class Cannon {
           horizontalRectangles = 0;
           currentShipY.clear();
           currentShipX.clear();
+          previousHit = false;
+          previousDirection = "";
+          resetLatestShotListAndPreviousDirection();
 
 
-          randomShot(rectangles); // shoot again
+//          randomShot(rectangles); // shoot again NOY SHOOT AGAIN
         }
 
       } else {
@@ -122,119 +147,147 @@ public class Cannon {
           System.out.println("followup - going UP");
           if (y > 0 && y <= 9) { // if y is 1++
             y--; // go up once
-            if (isCellBlack(rectangles, x, y)) { // check if rectrangle is black.
-              randomShot(rectangles); // if its black, shoot again.
-            } else { // if its not black
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectrangle is black or inactive.
+              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+              System.out.println("already black");
+              randomShot(rectangles); // if its black or inactive, shoot again. IT SHOULD NOT SHOOT AGAIN
+            } else { // if its not black and not inactive
               cannonBall(rectangles, x, y); // shoot cannonball
               if (isHit(rectangles, x, y)) { // if it hits a ship
                 nrOfHits++; // add hit
-                tries--; // keep going same direction
+                previousDirection = "UP";
+                addLatestXandY(x, y); // save latest coordinates
+                previousHit = true;
               } else { // if it misses
-                randomShot(rectangles); // start over
+                resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
               }
             }
 
           } else if (y == 0) { // if y = 0 (upper border)
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
               randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
+            } else { // if its not black or not inactive
               cannonBall(rectangles, x, y); // shoot cannonball
               if (isHit(rectangles, x, y)) { // if it hits a ship
                 nrOfHits++; // register hit
-                randomShot(rectangles); // go back to another shot since its at the top
+                previousDirection = "UP";
+                previousHit = true;
               } else { // if it doesnt hit
-                randomShot(rectangles); // change direction from initial hit
+                resetLatestShotListAndPreviousDirection(); // might be needed to use initial shot
               }
             }
           }
-
-        } else if (direction == Direction.DOWN) { // direction down
-          System.out.println("followup - going DOWN");
-          if (y >= 0 && y < 9) { // if y 8--
-            y++; // go down once
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                tries--; // get another try
-              } else { // if it misses
-                randomShot(rectangles); // start over
-              }
-            }
-
-          } else if (y == 9) { // if y == 9 (lower border)
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                randomShot(rectangles); // go back to another shot since its at the top
-              } else { // if it doesnt hit
-                randomShot(rectangles); // change direction from initial hit
-              }
-            }
-          }
-
-        } else if (direction == Direction.LEFT) { // direction LEFT
-          System.out.println("followup - going LEFT");
-          if (x > 0 && x <= 9) { // if x is 1++
-            x--; // go left once
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again.
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                tries--; // get another try
-              } else { // if it misses
-                randomShot(rectangles); // start over
-              }
-            }
-
-          } else if (x == 0) { // if x = 0 (left border)
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                randomShot(rectangles); // go back to another shot since its at the left border
-              } else { // if it doesnt hit
-                randomShot(rectangles); // change direction from initial hit
-              }
-            }
-          }
-
-
         } else if (direction == Direction.RIGHT) { // direction RIGHT
           System.out.println("followup - going RIGHT");
           if (x >= 0 && x < 9) { // if x 8--
             x++;
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+              System.out.println("already black");
               randomShot(rectangles); // if its black, shoot again
             } else { // if its not black
               cannonBall(rectangles, x, y); // shoot cannonball
               if (isHit(rectangles, x, y)) { // if it hits a ship
                 nrOfHits++; // register hit
-                tries--; // get another try
+                previousDirection = "RIGHT";
+                addLatestXandY(x, y); // save latest coordinates
+                previousHit = true;
               } else { // if it misses
-                randomShot(rectangles); // start over
+                resetLatestShotListAndPreviousDirection(); // start over
               }
             }
 
           } else if (x == 9) { // if y == 9 (right border)
-            if (isCellBlack(rectangles, x, y)) { // check if rectangle is black
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
               randomShot(rectangles); // if its black, shoot again
             } else { // if its not black
               cannonBall(rectangles, x, y); // shoot cannonball
               if (isHit(rectangles, x, y)) { // if it hits a ship
                 nrOfHits++; // register hit
-                randomShot(rectangles); // go back to another shot since its at the right border
+                previousDirection = "RIGHT";
+                previousHit = true;
+                if (isShipHorizontal) {
+                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
+                  previousHit = false; // set false to use initial shot
+                  previousDirection = "";
+                  randomShot(rectangles);
+                }
               } else { // if it doesnt hit
-                randomShot(rectangles); // change direction from initial hit
+                resetLatestShotListAndPreviousDirection(); // might be needed to use initial shot
+              }
+            }
+          }
+        } else if (direction == Direction.DOWN) { // direction down
+          System.out.println("followup - going DOWN");
+          if (y >= 0 && y < 9) { // if y 8--
+            y++; // go down once
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+              System.out.println("already black");
+              randomShot(rectangles); // if its black, shoot again
+            } else { // if its not black
+              cannonBall(rectangles, x, y); // shoot cannonball
+              if (isHit(rectangles, x, y)) { // if it hits a ship
+                nrOfHits++; // register hit
+                previousDirection = "DOWN";
+                addLatestXandY(x, y); // save latest coordinates
+                previousHit = true;
+              } else { // if it misses
+                resetLatestShotListAndPreviousDirection(); // start over
+              }
+            }
+
+          } else if (y == 9) { // if y == 9 (lower border)
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+              randomShot(rectangles); // if its black, shoot again
+            } else { // if its not black
+              cannonBall(rectangles, x, y); // shoot cannonball
+              if (isHit(rectangles, x, y)) { // if it hits a ship
+                nrOfHits++; // register hit
+                previousDirection = "DOWN";
+                previousHit = true;
+              } else { // if it doesnt hit
+                resetLatestShotListAndPreviousDirection(); // might be needed to use initial shot
+              }
+            }
+          }
+        } else if (direction == Direction.LEFT) { // direction LEFT
+          System.out.println("followup - going LEFT");
+          if (x > 0 && x <= 9) { // if x is 1++
+            x--; // go left once
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+              System.out.println("already black");
+              randomShot(rectangles); // if its black, shoot again
+            } else { // if its not black
+              cannonBall(rectangles, x, y); // shoot cannonball
+              if (isHit(rectangles, x, y)) { // if it hits a ship
+                nrOfHits++; // register hit
+                previousDirection = "LEFT";
+                addLatestXandY(x, y); // save latest coordinates
+                previousHit = true;
+              } else { // if it misses
+                resetLatestShotListAndPreviousDirection(); // start over
+              }
+            }
+
+          } else if (x == 0) { // if x = 0 (left border)
+            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+              randomShot(rectangles); // if its black, shoot again
+            } else { // if its not black
+              cannonBall(rectangles, x, y); // shoot cannonball
+              if (isHit(rectangles, x, y)) { // if it hits a ship
+                nrOfHits++; // register hit
+                previousDirection = "LEFT";
+                previousHit = true;
+                if (isShipHorizontal) {
+                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
+                  previousHit = false; // set false to use initial shot
+                  previousDirection = "";
+                  randomShot(rectangles);
+                }
+              } else { // if it doesnt hit
+                resetLatestShotListAndPreviousDirection(); // start over
               }
             }
           }
@@ -512,11 +565,9 @@ public class Cannon {
     if (isAShip(rectangles, x, y)) {
       cell.setFill(Color.RED);
       System.out.println("Shot hit at: " + cellId);
-//      deactivateBlock(rectangles, x, y);
     } else {
       cell.setFill(Color.BLACK);
       System.out.println("Shot missed at: " + cellId);
-//      rectangles[x][y].setIsActive(false); // deactivate cell
     }
   }
 
@@ -550,119 +601,133 @@ public class Cannon {
 
       // upper border
       if (x == 0 && y == 0) { // upper left corner
-        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y+1)) { // if cell under is not active and is not black and not a ship
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) { // if cell under is not active and is not black and not a ship
           rectangles[x][y + 1].setIsActive(false); // deactive bottom cell
         }
       } else if (x > 0 && x < 9 && y == 0) { // upper middle
-        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x-1, y)) { // left of ship
+        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x - 1, y)) { // left of ship
           rectangles[x - 1][y].setIsActive(false); // deactive left cell
 
         }
-        if (isActive(rectangles, x - 1, y + 1) && !isCellBlack(rectangles, x - 1, y + 1) && !isAShip(rectangles, x - 1, y + 1) && !isHit(rectangles, x-1, y+1)) {
+        if (isActive(rectangles, x - 1, y + 1) && !isCellBlack(rectangles, x - 1, y + 1) && !isAShip(rectangles, x - 1, y + 1) && !isHit(rectangles, x - 1, y + 1)) {
           rectangles[x - 1][y + 1].setIsActive(false); // deactivate bottom left
         }
-        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y+1)) {
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) {
           rectangles[x][y + 1].setIsActive(false); // deactivate cell under
         }
-        if (isActive(rectangles, x + 1, y + 1) && !isCellBlack(rectangles, x + 1, y + 1) && !isAShip(rectangles, x + 1, y + 1) && !isHit(rectangles, x+1, y+1)) {
+        if (isActive(rectangles, x + 1, y + 1) && !isCellBlack(rectangles, x + 1, y + 1) && !isAShip(rectangles, x + 1, y + 1) && !isHit(rectangles, x + 1, y + 1)) {
           rectangles[x + 1][y + 1].setIsActive(false); // deactivate bottom right cell
         }
-        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x+1, y)) {
+        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x + 1, y)) {
           rectangles[x + 1][y].setIsActive(false); // deactivate right cell
         }
       } else if (x == 9 && y == 0) { // if upper right corner - only need to check bottom
-        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y+1)) {
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) {
           rectangles[x][y + 1].setIsActive(false); // deactivate bottom cell
         }
       }
       // check right border
       else if (x == 9 && y > 0 && y < 9) { // if middle of right border, check upper, upperleft, left, bottom left and down.
-        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y-1)) {
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
           rectangles[x][y - 1].setIsActive(false); // deactivate cell above
         }
-        if (isActive(rectangles, x - 1, y - 1) && !isCellBlack(rectangles, x - 1, y - 1) && !isAShip(rectangles, x - 1, y - 1) && !isHit(rectangles, x-1, y-1)) {
+        if (isActive(rectangles, x - 1, y - 1) && !isCellBlack(rectangles, x - 1, y - 1) && !isAShip(rectangles, x - 1, y - 1) && !isHit(rectangles, x - 1, y - 1)) {
           rectangles[x - 1][y - 1].setIsActive(false); // deactivate cell upper left
         }
-        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x-1, y)) {
+        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x - 1, y)) {
           rectangles[x - 1][y].setIsActive(false); // deactivate left cell
         }
-        if (isActive(rectangles, x - 1, y + 1) && !isCellBlack(rectangles, x - 1, y + 1) && !isAShip(rectangles, x - 1, y + 1) && !isHit(rectangles, x-1, y+1)) {
+        if (isActive(rectangles, x - 1, y + 1) && !isCellBlack(rectangles, x - 1, y + 1) && !isAShip(rectangles, x - 1, y + 1) && !isHit(rectangles, x - 1, y + 1)) {
           rectangles[x - 1][y + 1].setIsActive(false); // deactivate bottom left cell
         }
-        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y+1)) {
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) {
           rectangles[x][y + 1].setIsActive(false); // deactivate bottom cell
         }
       } else if (x == 9 && y == 9) {
         // bottom right corner, only need to ceck up
-        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y-1)) {
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
           rectangles[x][y - 1].setIsActive(false); // deactivate upper cell
         }
       } else if (x > 0 && x < 9 && y == 9) {
         // bottom middle, check left, left up, up, right up, right
-        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x-1, y)) {
+        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x - 1, y)) {
           rectangles[x - 1][y].setIsActive(false); // deactivate left cell
         }
-        if (isActive(rectangles, x - 1, y - 1) && !isCellBlack(rectangles, x - 1, y - 1) && !isAShip(rectangles, x - 1, y - 1) && !isHit(rectangles, x-1, y-1)) {
+        if (isActive(rectangles, x - 1, y - 1) && !isCellBlack(rectangles, x - 1, y - 1) && !isAShip(rectangles, x - 1, y - 1) && !isHit(rectangles, x - 1, y - 1)) {
           rectangles[x - 1][y - 1].setIsActive(false); // deactivate upper left cell
         }
-        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y-1)) {
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
           rectangles[x][y - 1].setIsActive(false); // deactivate upper cell
         }
-        if (isActive(rectangles, x + 1, y - 1) && !isCellBlack(rectangles, x + 1, y - 1) && !isAShip(rectangles, x + 1, y - 1) && !isHit(rectangles, x+1, y-1)) {
+        if (isActive(rectangles, x + 1, y - 1) && !isCellBlack(rectangles, x + 1, y - 1) && !isAShip(rectangles, x + 1, y - 1) && !isHit(rectangles, x + 1, y - 1)) {
           rectangles[x + 1][y - 1].setIsActive(false); // deactivate upper right cell
         }
-        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x+1, y)) {
+        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x + 1, y)) {
           rectangles[x + 1][y].setIsActive(false); // deactivate right cell
         }
       } else if (x == 0 && y == 9) {
-        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y-1)) {
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
           rectangles[x][y - 1].setIsActive(false); // deactivate upper cell
         }
       } else if (x == 0 && y > 0 && y < 9) {
         // left border, check up, up right, right, down right and down
-        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y-1)) {
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isAShip(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
           rectangles[x][y - 1].setIsActive(false); // deactivate upper cell
         }
-        if (isActive(rectangles, x + 1, y - 1) && !isCellBlack(rectangles, x + 1, y - 1) && !isAShip(rectangles, x + 1, y - 1) && !isHit(rectangles, x+1, y-1)) {
+        if (isActive(rectangles, x + 1, y - 1) && !isCellBlack(rectangles, x + 1, y - 1) && !isAShip(rectangles, x + 1, y - 1) && !isHit(rectangles, x + 1, y - 1)) {
           rectangles[x + 1][y - 1].setIsActive(false); // deactivate upper right cell
         }
-        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x+1, y)) {
+        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x + 1, y)) {
           rectangles[x + 1][y].setIsActive(false); // deactivate right cell
         }
-        if (isActive(rectangles, x + 1, y + 1) && !isCellBlack(rectangles, x + 1, y + 1) && !isAShip(rectangles, x + 1, y + 1) && !isHit(rectangles, x+1, y+1)) {
+        if (isActive(rectangles, x + 1, y + 1) && !isCellBlack(rectangles, x + 1, y + 1) && !isAShip(rectangles, x + 1, y + 1) && !isHit(rectangles, x + 1, y + 1)) {
           rectangles[x + 1][y + 1].setIsActive(false); // deactivate right bottom cell
         }
-        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y+1)) {
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) {
           rectangles[x][y + 1].setIsActive(false); // deactivate bottom cell
         }
       } else if (x > 0 && x < 9 && y > 0 && y < 9) {
         // middle of board, not in borders. check up, up right, right, down right, down, down left, left, up left
-        if (isActive(rectangles, x, y-1) && !isCellBlack(rectangles, x, y-1) && !isHit(rectangles, x, y-1)) {
-          rectangles[x][y-1].setIsActive(false); // deactivate upper cell
+        if (isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1) && !isHit(rectangles, x, y - 1)) {
+          rectangles[x][y - 1].setIsActive(false); // deactivate upper cell
         }
-        if (isActive(rectangles, x+1, y-1) && !isCellBlack(rectangles, x+1, y-1) && !isAShip(rectangles, x+1, y-1) && !isHit(rectangles, x+1, y-1)) {
-          rectangles[x+1][y-1].setIsActive(false); // deactivate upper right cell
+        if (isActive(rectangles, x + 1, y - 1) && !isCellBlack(rectangles, x + 1, y - 1) && !isAShip(rectangles, x + 1, y - 1) && !isHit(rectangles, x + 1, y - 1)) {
+          rectangles[x + 1][y - 1].setIsActive(false); // deactivate upper right cell
         }
-        if (isActive(rectangles, x+1, y) && !isCellBlack(rectangles, x+1, y) && !isAShip(rectangles, x+1, y) && !isHit(rectangles, x+1, y)) {
-          rectangles[x+1][y].setIsActive(false); // deactivate right cell
+        if (isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y) && !isAShip(rectangles, x + 1, y) && !isHit(rectangles, x + 1, y)) {
+          rectangles[x + 1][y].setIsActive(false); // deactivate right cell
         }
-        if (isActive(rectangles, x+1, y+1) && !isCellBlack(rectangles, x+1, y+1) && !isAShip(rectangles, x+1, y+1) && !isHit(rectangles, x+1, y+1)) {
-          rectangles[x+1][y].setIsActive(false); // deactivate bottom right cell
+        if (isActive(rectangles, x + 1, y + 1) && !isCellBlack(rectangles, x + 1, y + 1) && !isAShip(rectangles, x + 1, y + 1) && !isHit(rectangles, x + 1, y + 1)) {
+          rectangles[x + 1][y + 1].setIsActive(false); // deactivate bottom right cell
         }
-        if (isActive(rectangles, x, y+1) && !isCellBlack(rectangles, x, y+1) && !isAShip(rectangles, x, y+1) && !isHit(rectangles, x, y+1)) {
-          rectangles[x][y+1].setIsActive(false); // deactivate bottom cell
+        if (isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1) && !isAShip(rectangles, x, y + 1) && !isHit(rectangles, x, y + 1)) {
+          rectangles[x][y + 1].setIsActive(false); // deactivate bottom cell
         }
-        if (isActive(rectangles, x-1, y+1) && !isCellBlack(rectangles, x-1, y+1) && !isAShip(rectangles, x-1, y+1) && !isHit(rectangles, x-1, y+1)) {
-          rectangles[x-1][y+1].setIsActive(false); // deactivate bottom left cell
+        if (isActive(rectangles, x - 1, y + 1) && !isCellBlack(rectangles, x - 1, y + 1) && !isAShip(rectangles, x - 1, y + 1) && !isHit(rectangles, x - 1, y + 1)) {
+          rectangles[x - 1][y + 1].setIsActive(false); // deactivate bottom left cell
         }
-        if (isActive(rectangles, x-1, y) && !isCellBlack(rectangles, x-1, y) && !isAShip(rectangles, x-1, y) && !isHit(rectangles, x-1, y)) {
-          rectangles[x-1][y].setIsActive(false); // deactivate left cell
+        if (isActive(rectangles, x - 1, y) && !isCellBlack(rectangles, x - 1, y) && !isAShip(rectangles, x - 1, y) && !isHit(rectangles, x - 1, y)) {
+          rectangles[x - 1][y].setIsActive(false); // deactivate left cell
         }
-        if (isActive(rectangles, x-1, y-1) && !isCellBlack(rectangles, x-1, y-1) && !isAShip(rectangles, x-1, y-1) && !isHit(rectangles, x-1, y-1)) {
-          rectangles[x-1][y-1].setIsActive(false); // deactivate upper right cell
+        if (isActive(rectangles, x - 1, y - 1) && !isCellBlack(rectangles, x - 1, y - 1) && !isAShip(rectangles, x - 1, y - 1) && !isHit(rectangles, x - 1, y - 1)) {
+          rectangles[x - 1][y - 1].setIsActive(false); // deactivate upper right cell
         }
       }
     }
+  }
+
+  public void resetLatestShotListAndPreviousDirection() {
+    latestShotX.clear();
+    latestShotY.clear();
+    previousDirection = "";
+    previousHit = false;
+  }
+
+  public void addLatestXandY(int x, int y) {
+    latestShotX.clear();
+    latestShotY.clear();
+    latestShotX.add(x);
+    latestShotY.add(y);
   }
 
   //-- Fredrik L

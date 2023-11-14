@@ -6,8 +6,8 @@ import java.util.SplittableRandom;
 public class RectangleCell {
 
 
-  private boolean isShip=false;
-  private boolean isActive=true;
+  private boolean isShip = false;
+  private boolean isActive = true;
   private String rectangleId;
 
   private Rectangle rectangelCell = new Rectangle(50, 50);
@@ -23,10 +23,9 @@ public class RectangleCell {
   }
 
 
-
   //Getters och Setters
   public boolean getIsShip() {
-    if (isShip){
+    if (isShip) {
       return rectangelCell.getFill() == Color.ORANGE;
     }
     return false;
@@ -34,10 +33,9 @@ public class RectangleCell {
 
   public void setisShip(boolean ship) {
     isShip = ship;
-    if (isShip){
+    if (isShip) {
       rectangelCell.setFill(Color.ORANGE);
-    }
-    else rectangelCell.setFill(Color.ROYALBLUE);
+    } else rectangelCell.setFill(Color.ROYALBLUE);
 
   }
 
@@ -55,6 +53,10 @@ public class RectangleCell {
 
   public void setIsActive(boolean active) {
     isActive = active;
+
+    if (!isActive) {
+      this.rectangelCell.setFill(Color.GREENYELLOW);
+    }
   }
 
   public String getRectangleId() {

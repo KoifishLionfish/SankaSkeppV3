@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -8,18 +9,20 @@ import javafx.scene.paint.Color;
 
 public class Board extends Application {
 
+  private RectangleCell[][] rectangleCells;
+
   @Override
   public void start(Stage primaryStage) throws Exception {
 
     primaryStage.setTitle("Battleships");
-    primaryStage.setHeight(1000);
-    primaryStage.setWidth(1000);
+    primaryStage.setHeight(610);
+    primaryStage.setWidth(600);
 
     char idChar;
     int idNumber;
     String rektangelId;
 
-    RectangleCell[][] rectangleCells = new RectangleCell[10][10];
+    rectangleCells = new RectangleCell[10][10];
 
     initializeBoard(rectangleCells);
 
@@ -29,22 +32,12 @@ public class Board extends Application {
 
     // Gridpane to hold the game cells
     GridPane pane = new GridPane();
-        /*
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
-            }
-        }*/
 
     for (int i = 0; i < 10; i++) {
-
       for (int j = 0; j < 10; j++) {
-        // RectangleCell rectangleCell = new RectangleCell();
-        // rectangleCells[i][j] = rectangleCell;
         pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
 
-
-        //id för varje rektangel
+        // id för varje rektangel
         idChar = (char) (65 + j);
         idNumber = i;
         rektangelId = String.valueOf(idChar) + idNumber;
@@ -52,11 +45,10 @@ public class Board extends Application {
       }
     }
 
+    Cannon cannon = new Cannon(); // Create an instance of Cannon outside the button action
+
     if (success) {
       System.out.println("Ships placed successfully!");
-      Cannon cannon = new Cannon();
-      cannon.randomShot(rectangleCells);
-
     } else {
       System.out.println("Failed to place ships.");
     }
@@ -92,11 +84,20 @@ public class Board extends Application {
       vbox.getChildren().add(l);
     }
 
+    // Button for BOOM!
+    Button boomButton = new Button("BOOM!");
+    boomButton.setOnAction(e -> {
+      cannon.randomShot(rectangleCells);
+      updateGridPane(pane);
+    }); // Call randomShot when the button is clicked
+    boomButton.setDisable(!success); // Disable the button if success is false
+
     // BorderPane to structure the layout
     BorderPane borderPane = new BorderPane();
     borderPane.setTop(hbox);
     borderPane.setLeft(vbox);
     borderPane.setCenter(pane);
+    borderPane.setBottom(boomButton);  // Set the BOOM! button at the bottom
 
     Scene scene = new Scene(borderPane);
     primaryStage.setScene(scene);
@@ -109,5 +110,21 @@ public class Board extends Application {
         rectangles[i][j] = new RectangleCell();
       }
     }
+  }
+
+  private void updateGridPane(GridPane pane) {
+    // Clear the existing nodes in the GridPane
+    pane.getChildren().clear();
+
+    // Add the updated RectangleCell nodes
+    for (int i = 0; i < 10; i++) {
+      for (int j = 0; j < 10; j++) {
+        pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
+      }
+    }
+  }
+
+  public static void main(String[] args) {
+    launch(args);
   }
 }
