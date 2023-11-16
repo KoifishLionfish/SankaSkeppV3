@@ -15,17 +15,16 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Board battelBoard = new Board();
-        battelBoard.start(new Stage());
-
-
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    Board battelBoard = new Board();
+    battelBoard.start(new Stage());
 
 
-    }
+
+  }
 }
