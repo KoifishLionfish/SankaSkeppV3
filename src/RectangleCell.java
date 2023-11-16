@@ -53,10 +53,6 @@ public class RectangleCell {
 
   public void setIsActive(boolean active) {
     isActive = active;
-
-    if (!isActive) {
-      this.rectangelCell.setFill(Color.GREENYELLOW);
-    }
   }
 
   public String getRectangleId() {

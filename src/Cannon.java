@@ -24,113 +24,105 @@ public class Cannon {
   private int horizontalRectangles = 0;
   private int verticalRectangles = 0;
   private int totalMisses = 0;
+  private int totalHits = 0;
+  private boolean gameOver = false;
   private boolean previousHit = false;
 
 
   // random shot
   public void randomShot(RectangleCell[][] rectangles) {
-    System.out.println("randomshot() ->");
-    // Random number generator
-    Random randomHit = new Random();
-    int x = randomHit.nextInt(10);
-    int y = randomHit.nextInt(10);
 
-    // if no ship has been hit or sunk
-    if (initialHitX.isEmpty() && initialHitY.isEmpty()) {
-      // if rectangle isnt black and isnt hit ship (RED)
-      if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
-        // shoots cannonball
-        cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
+    if (!gameOver) {
+      // Random number generator
+      Random randomHit = new Random();
+      int x = randomHit.nextInt(10);
+      int y = randomHit.nextInt(10);
 
-        if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) {
-          totalMisses++;
-        } else if (isHit(rectangles, x, y)) {
-          nrOfHits++; // register hit
+      // if no ship has been hit or sunk
+      if (initialHitX.isEmpty() && initialHitY.isEmpty()) {
+        // if rectangle isnt black and isnt hit ship (RED)
+        if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
+          // shoots cannonball
+          cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
 
-          // save coords
-          initialHitX.add(x);
-          initialHitY.add(y);
-          currentShipX.add(x);
-          currentShipY.add(y);
+          if (isHit(rectangles, x, y)) {
+            nrOfHits++; // register hit
+            // save coords
+            initialHitX.add(x);
+            initialHitY.add(y);
+            currentShipX.add(x);
+            currentShipY.add(y);
 
 
-          shipLength++; // add rectangle to length of ship
+            shipLength++; // add rectangle to length of ship
 
 
-          scanShipLength(rectangles, x, y); // scan ship for knowing when its broken later
-          System.out.println("Horizontal: " + isShipHorizontal);
-          System.out.println("Vertical: " + isShipVertical);
-          typeOfShip(); // writes what type of ship it is to check for errors
+            scanShipLength(rectangles, x, y); // scan ship for knowing when its broken later
+            typeOfShip(); // writes what type of ship it is to check for errors
 
-          //aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
+          }
+        } else {
+          randomShot(rectangles); // if cell is black or red(hit), shoot again
         }
       } else {
-        randomShot(rectangles); // if cell is black or red(hit), shoot again
-      }
-    } else {
 
-      // if battleship isnt sunk
-      // if list is not empty go back to initial shot:
+        // if battleship isnt sunk
+        // if list is not empty go back to initial shot:
 
 
-      if (previousHit) {
-        x = latestShotX.get(0);
-        y = latestShotY.get(0);
+        if (previousHit) {
+          x = latestShotX.get(0);
+          y = latestShotY.get(0);
 
-        if (previousDirection.contains("RIGHT") && x != 9) {
-          followUpShot(rectangles, x, y, Direction.RIGHT);
-        } else if (previousDirection.contains("LEFT") && x != 0) {
-          followUpShot(rectangles, x, y, Direction.LEFT);
-        } else if (previousDirection.contains("UP") && y != 0) {
-          followUpShot(rectangles, x, y, Direction.UP);
-        } else if (previousDirection.contains("DOWN") && y != 9) {
-          followUpShot(rectangles, x, y, Direction.DOWN);
-        }
-      } else {
-        x = initialHitX.get(0);
-        y = initialHitY.get(0);
+          if (previousDirection.contains("RIGHT") && x != 9) {
+            followUpShot(rectangles, x, y, Direction.RIGHT);
+          } else if (previousDirection.contains("LEFT") && x != 0) {
+            followUpShot(rectangles, x, y, Direction.LEFT);
+          } else if (previousDirection.contains("UP") && y != 0) {
+            followUpShot(rectangles, x, y, Direction.UP);
+          } else if (previousDirection.contains("DOWN") && y != 9) {
+            followUpShot(rectangles, x, y, Direction.DOWN);
+          }
+        } else {
+          x = initialHitX.get(0);
+          y = initialHitY.get(0);
 
-        if (previousDirection.isEmpty()) { // om previousDirection = "";
-          aimRandomDirection(rectangles, x, y); // aim random direction -> direction -> followUpShot
-        } else { // annars om previousDirection har något i sig
-          if (previousDirection.contains("UP")) {
-            aimUp(rectangles, x, y);
-          } else if (previousDirection.contains("DOWN")) {
-            aimDown(rectangles, x, y);
-          } else if (previousDirection.contains("LEFT")) {
-            aimLeft(rectangles, x, y);
-          } else if (previousDirection.contains("RIGHT")) {
-            aimRight(rectangles, x, y);
+          if (previousDirection.isEmpty()) {
+            aimRandomDirection(rectangles, x, y);
+          } else { // else, if previousDirection has direction
+            if (previousDirection.contains("UP")) {
+              aimUp(rectangles, x, y);
+            } else if (previousDirection.contains("DOWN")) {
+              aimDown(rectangles, x, y);
+            } else if (previousDirection.contains("LEFT")) {
+              aimLeft(rectangles, x, y);
+            } else if (previousDirection.contains("RIGHT")) {
+              aimRight(rectangles, x, y);
+            }
           }
         }
-
-
       }
-
-
+    } else {
+      gameOver();
     }
   }
 
   // follow up shots
   public void followUpShot(RectangleCell[][] rectangles, int x, int y, Direction direction) {
-    System.out.println("followupshot() ->");
 
-    for (int tries = 0; tries < 1; tries++) { // direction up
+    for (int tries = 0; tries < 1; tries++) {
 
       if ((shipLength - nrOfHits) == 0) {
         System.out.println("You sunk my: " + currentShip);
         numberOfSunkenShips++;
-
-        System.out.println("ship had length: " + shipLength);
-
-        System.out.println("amount of ship cells (should be same as shiplength): " + currentShipY.size());
 
         deactivateCellsAroundShip(rectangles);
 
         System.out.println("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
 
         if (numberOfSunkenShips == NUMBER_OF_SHIPS) { // if all ships are sunk
-          gameOver(); // if game is won run method and after
+          gameOver = true;
+          gameOver();
           break; // break
         } else { // if there are ships left
 
@@ -151,252 +143,219 @@ public class Cannon {
 
         }
         break;
-
       } else {
 
         if (direction == Direction.UP) {
-          System.out.println("followup - going UP");
           if (y > 0 && y <= 9) { // if y is 1++
             y--; // go up once
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectrangle is black or inactive.
-              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
-              System.out.println("already black");
-              randomShot(rectangles); // if its black or inactive, shoot again. IT SHOULD NOT SHOOT AGAIN
-            } else { // if its not black and not inactive
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // add hit
-                previousDirection = "UP";
-                addLatestXandY(x, y); // save latest coordinates
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
-                }
-              } else { // if it misses
-                if (previousDirection.contains("UP") && isShipVertical && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
-                  resetLatestShotListAndPreviousDirection();
-                  previousDirection = "DOWN";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+            if (y > 0) {
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // if rectrangle is black or inactive.
+                resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+                randomShot(rectangles); // if its black or inactive, shoot again. IT SHOULD NOT SHOOT AGAIN
+              } else { // if its not black and not inactive
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // add hit
+                  previousDirection = "UP";
+                  addLatestXandY(x, y); // save latest coordinates
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) { // if ship is broken
+                    followUpShot(rectangles, x, y, direction); // re run method
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("UP") && isShipVertical && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection(); // Reset LatestShot
+                    previousDirection = "DOWN"; // change direction to down to go opposite direction in randomShot
+                  }
                 }
               }
-            }
-
-          } else if (y == 0) { // if y = 0 (upper border)
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black or not inactive
-              if (isHit(rectangles, x, y)) {
-                resetLatestShotListAndPreviousDirection();
-                randomShot(rectangles);
-              }
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "UP";
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
+            } else {
+              // if y = 0 (upper border)
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // if rectangle is black
+                randomShot(rectangles); // if its black, shoot again;
+              } else { // if its not black or not inactive
+                if (isHit(rectangles, x, y)) { // if rectangle is already hit
+                  resetLatestShotListAndPreviousDirection(); // reset shotlist
+                  randomShot(rectangles); // shoot somehwere else
                 }
-                if (isShipVertical) {
-                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
-                  previousHit = false; // set false to use initial shot
-                  previousDirection = "";
-                  randomShot(rectangles);
-                }
-                else {
-                  resetLatestShotListAndPreviousDirection(); // if game not done, random shot
-                  randomShot(rectangles);
-                }
-              } else { // if it misses
-                if (previousDirection.contains("UP") && isShipVertical && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
-                  resetLatestShotListAndPreviousDirection();
-                  previousDirection = "DOWN";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "UP"; // previous direction was up
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) { // if ship is broken
+                    followUpShot(rectangles, x, y, direction); // re run the method.
+                  } else { // if ship has not been broken
+                    resetLatestShotListAndPreviousDirection(); // Reset LatestShotList to go back to initial hit
+                    previousDirection = "DOWN"; // change direction  to Down
+                  }
+                } else { // if it misses
+                  if (previousDirection.contains("UP") && isShipVertical && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "DOWN";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
               }
             }
           }
         } else if (direction == Direction.RIGHT) { // direction RIGHT
-          System.out.println("followup - going RIGHT");
           if (x >= 0 && x < 9) { // if x 8--
             x++;
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
-              System.out.println("already black");
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "RIGHT";
-                addLatestXandY(x, y); // save latest coordinates
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
+            if (x < 9) {
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "RIGHT";
+                  addLatestXandY(x, y); // save latest coordinates
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) { // change direction
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "LEFT";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
-
-              } else { // if it misses
-                if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
+              }
+            } else { // if y == 9 (right border)
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                if (isHit(rectangles, x, y)) { // doesnt get stuck in border
                   resetLatestShotListAndPreviousDirection();
-                  previousDirection = "LEFT";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
-                }
-              }
-            }
-
-          } else if (x == 9) { // if y == 9 (right border)
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              if (isHit(rectangles, x, y)) { // doesnt get stuck in border
-                resetLatestShotListAndPreviousDirection();
-                randomShot(rectangles);
-              }
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "RIGHT";
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
-                }
-                if (isShipHorizontal) {
-                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
-                  previousHit = false; // set false to use initial shot
-                  previousDirection = "";
                   randomShot(rectangles);
                 }
-              } else { // if it misses
-                if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
-                  resetLatestShotListAndPreviousDirection();
-                  previousDirection = "LEFT";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "RIGHT";
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "LEFT";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
               }
             }
           }
         } else if (direction == Direction.DOWN) { // direction down
-          System.out.println("followup - going DOWN");
           if (y >= 0 && y < 9) { // if y 8--
             y++; // go down once
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "DOWN";
-                addLatestXandY(x, y); // save latest coordinates
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
+            if (y < 9) {
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "DOWN";
+                  addLatestXandY(x, y); // save latest coordinates
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses change, go back to initialHit and pass opposite direction
+                  if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "UP";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
-              } else { // if it misses
-                if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
+              }
+            } else { // if y == 9 (lower border)
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                if (isHit(rectangles, x, y)) { // dont get stuck in border
                   resetLatestShotListAndPreviousDirection();
-                  previousDirection = "UP";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
-                }
-              }
-            }
-
-          } else if (y == 9) { // if y == 9 (lower border)
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              if (isHit(rectangles, x, y)) { // dont get stuck in border
-                resetLatestShotListAndPreviousDirection();
-                System.out.println("down in 9");
-                randomShot(rectangles);
-              }
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "DOWN";
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
-                }
-                if (isShipVertical) {
-                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
-                  previousHit = false; // set false to use initial shot
-                  previousDirection = "";
                   randomShot(rectangles);
                 }
-              } else { // if it misses
-                if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
-                  resetLatestShotListAndPreviousDirection();
-                  previousDirection = "UP";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "DOWN";
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "UP";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
               }
             }
           }
         } else if (direction == Direction.LEFT) { // direction LEFT
-          System.out.println("followup - going LEFT");
           if (x > 0 && x <= 9) { // if x is 1++
             x--; // go left once
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
-              System.out.println("already black");
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "LEFT";
-                addLatestXandY(x, y); // save latest coordinates
-                previousHit = true;
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
+            if (x > 0) {
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                resetLatestShotListAndPreviousDirection(); // reset latest shotList, go back to initial shot
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "LEFT";
+                  addLatestXandY(x, y); // save latest coordinates
+                  previousHit = true;
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "RIGHT";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
-              } else { // if it misses
-                if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
+              }
+            } else { // if x = 0 (left border)
+              if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
+                randomShot(rectangles); // if its black, shoot again
+              } else { // if its not black
+                if (isHit(rectangles, x, y)) { // dont get stuck in border
                   resetLatestShotListAndPreviousDirection();
-                  previousDirection = "RIGHT";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
-                }
-              }
-            }
-
-          } else if (x == 0) { // if x = 0 (left border)
-            if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // check if rectangle is black
-              randomShot(rectangles); // if its black, shoot again
-            } else { // if its not black
-              if (isHit(rectangles, x, y)) { // dont get stuck in border
-                resetLatestShotListAndPreviousDirection();
-                randomShot(rectangles);
-              }
-              cannonBall(rectangles, x, y); // shoot cannonball
-              if (isHit(rectangles, x, y)) { // if it hits a ship
-                nrOfHits++; // register hit
-                previousDirection = "LEFT";
-                previousHit = true;
-
-                if (shipLength - nrOfHits == 0) {
-                  followUpShot(rectangles, x, y, direction);
-                }
-                if (isShipHorizontal) {
-                  resetLatestShotListAndPreviousDirection(); // reset, go back to initial shot
-                  previousHit = false; // set false to use initial shot
-                  previousDirection = "";
-                  System.out.println("ship is horizontal and has been reset");
                   randomShot(rectangles);
                 }
-              } else { // if it misses
-                if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) { // JOBBAR PÅ DETTA NU
-                  resetLatestShotListAndPreviousDirection();
-                  previousDirection = "RIGHT";
-                } else {
-                  resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                cannonBall(rectangles, x, y); // shoot cannonball
+                if (isHit(rectangles, x, y)) { // if it hits a ship
+                  nrOfHits++; // register hit
+                  previousDirection = "LEFT";
+                  previousHit = true;
+
+                  if (shipLength - nrOfHits == 0) {
+                    followUpShot(rectangles, x, y, direction);
+                  }
+                } else { // if cannonball misses
+                  if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "RIGHT";
+                  } else {
+                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
+                  }
                 }
               }
             }
@@ -406,10 +365,13 @@ public class Cannon {
     }
   }
 
-
   // Game over
   public void gameOver() {
+    int totalShots = (totalMisses + totalHits);
     System.out.println("Congratulations, you have won!");
+    System.out.println("Total shots made: " + totalShots);
+    System.out.println("Total hits: " + totalHits + "/" + totalShots);
+    System.out.println("Total misses: " + totalMisses + "/" + totalShots);
   }
 
   // type of ship
@@ -639,59 +601,37 @@ public class Cannon {
 
   //Methods to choose a direction
   public void aimUp(RectangleCell[][] rectangles, int x, int y) {
-    if (y > 0) {
-      if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
-        followUpShot(rectangles, x, y, Direction.UP); // aim up
-      } else { // else if rectangle above is red
-        aimRandomDirection(rectangles, x, y); // choose new direction
-      }
-    } else if (y == 0) {
-      resetLatestShotListAndPreviousDirection();
-      randomShot(rectangles);
+    if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
+      followUpShot(rectangles, x, y, Direction.UP); // aim up
+    } else { // else if rectangle above is red
+      aimRandomDirection(rectangles, x, y); // choose new direction
     }
-
   }
 
   public void aimRight(RectangleCell[][] rectangles, int x, int y) {
-    if (x < 9) {
-      if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
-        followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
-      } else { // else if rectangle to the right is red
-        aimRandomDirection(rectangles, x, y); // choose new direction
-      }
-    } else if (x == 9) {
-      resetLatestShotListAndPreviousDirection();
-      randomShot(rectangles);
+    if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
+      followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
+    } else { // else if rectangle to the right is red
+      aimRandomDirection(rectangles, x, y); // choose new direction
     }
-
   }
 
   public void aimDown(RectangleCell[][] rectangles, int x, int y) {
-    if (y < 9) {
-      if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
-        followUpShot(rectangles, x, y, Direction.DOWN); // aim down
-      } else { // else if rectangle under is red
-        randomShot(rectangles); // choose new direction
-      }
-    } else if (y == 9) {
-      resetLatestShotListAndPreviousDirection();
+    if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
+      followUpShot(rectangles, x, y, Direction.DOWN); // aim down
+    } else { // else if rectangle under is red
       randomShot(rectangles); // choose new direction
     }
 
   }
 
   public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
-    if (x > 0) {
-      if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
-        followUpShot(rectangles, x, y, Direction.LEFT); // aim left
-      } else { // else if rectangle to the left is red
-        aimRandomDirection(rectangles, x, y); // choose new direction
-      }
-    } else if (x == 0) {
-      resetLatestShotListAndPreviousDirection();
-      randomShot(rectangles);
-    }
 
+    if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
+      followUpShot(rectangles, x, y, Direction.LEFT); // aim left
+    } else { // else if rectangle to the left is red
+      aimRandomDirection(rectangles, x, y); // choose new direction
+    }
   }
 
   public void cannonBall(RectangleCell[][] rectangles, int x, int y) {
@@ -700,9 +640,11 @@ public class Cannon {
     if (isAShip(rectangles, x, y)) {
       cell.setFill(Color.RED);
       System.out.println("Shot hit at: " + cellId);
+      totalHits++; // count hit
     } else {
       cell.setFill(Color.BLACK);
       System.out.println("Shot missed at: " + cellId);
+      totalMisses++; // count miss
     }
   }
 
@@ -863,46 +805,6 @@ public class Cannon {
     latestShotY.clear();
     latestShotX.add(x);
     latestShotY.add(y);
-  }
-
-  public void isShipBrokenOrGameOver(RectangleCell[][] rectangles, int x, int y) {
-    if ((shipLength - nrOfHits) == 0) {
-      System.out.println("You sunk my: " + currentShip);
-      numberOfSunkenShips++;
-
-      System.out.println("ship had length: " + shipLength);
-
-      System.out.println("amount of ship cells (should be same as shiplength): " + currentShipY.size());
-
-      deactivateCellsAroundShip(rectangles);
-
-      System.out.println("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
-
-      // if whole ship is sunk, deactivate cells next to initialHit before resetting
-      x = initialHitX.get(0);
-      y = initialHitY.get(0);
-    }
-
-    if (numberOfSunkenShips == NUMBER_OF_SHIPS) { // if all ships are sunk
-      gameOver(); // if game is won run method and after
-    } else { // if there are ships left
-
-      // resetting
-      initialHitX.remove(0);
-      initialHitY.remove(0);
-      shipLength = 0;
-      nrOfHits = 0;
-      isShipVertical = false;
-      isShipHorizontal = false;
-      verticalRectangles = 0;
-      horizontalRectangles = 0;
-      currentShipY.clear();
-      currentShipX.clear();
-      previousHit = false;
-      previousDirection = "";
-      resetLatestShotListAndPreviousDirection();
-
-    }
   }
 
 //-- Fredrik L
