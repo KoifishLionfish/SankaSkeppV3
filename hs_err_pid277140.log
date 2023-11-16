@@ -1,0 +1,82 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x000000005baea14b, pid=277140, tid=0x00000000000411b4
+#
+# JRE version: OpenJDK Runtime Environment (8.0_392-b08) (build 1.8.0_392-b08)
+# Java VM: OpenJDK 64-Bit Server VM (25.392-b08 mixed mode windows-amd64 compressed oops)
+# Problematic frame:
+# V  [jvm.dll+0x1ea14b]
+#
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   https://github.com/corretto/corretto-8/issues/
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000020445d35000):  JavaThread "Thread-20495" [_thread_in_vm, id=266676, stack(0x000000610ef00000,0x000000610f000000)]
+
+siginfo: ExceptionCode=0xc0000005, writing address 0x000000610eff9880
+
+Registers:
+RAX=0x0000000000000007, RBX=0x0000000000000007, RCX=0x000000610eff9880, RDX=0x0000000000006000
+RSP=0x000000610efff880, RBP=0x000000610efff980, RSI=0x0000000000000007, RDI=0x000002047f76e090
+R8 =0x0000000000000005, R9 =0x0000000000000006, R10=0x0000020442970230, R11=0x000002047f76e090
+R12=0x0000020442a42f80, R13=0x000000610efffc50, R14=0x000000610efffb80, R15=0x000000610efff880
+RIP=0x000000005baea14b, EFLAGS=0x0000000000010202
+
+Top of Stack: (sp=0x000000610efff880)
+0x000000610efff880:   0000020445d35000 0000000000000001
+0x000000610efff890:   000002047f76e090 000000005b9a375a
+0x000000610efff8a0:   00000007c0006a20 000000005b90db27
+0x000000610efff8b0:   000002047f76e090 0000020445d35000
+0x000000610efff8c0:   0000000a00000000 000002047f76e090
+0x000000610efff8d0:   0000020445d35000 0000020400046d20
+0x000000610efff8e0:   000002047f76e090 00000007c0006a20
+0x000000610efff8f0:   000000610efff9c1 0000000000000000
+0x000000610efff900:   000000610efff920 0000000000000001
+0x000000610efff910:   0000000000000005 0000020445d35000
+0x000000610efff920:   000002047f76e090 0000020445d35000
+0x000000610efff930:   000002047f76e090 0000020445d35000
+0x000000610efff940:   000002047f76e090 0000020445d35000
+0x000000610efff950:   0000020445d35000 000000005b9a8551
+0x000000610efff960:   0000020442a42f80 000002047f76e090
+0x000000610efff970:   00000007c0006a20 0000000000000005 
+
+Instructions: (pc=0x000000005baea14b)
+0x000000005baea12b:   f8 7c 33 48 8b de e8 fa 6c 08 00 48 63 d0 ff c6
+0x000000005baea13b:   48 0f af d3 49 8b cf 48 63 c6 48 2b ca 48 ff c3
+0x000000005baea14b:   c7 01 00 00 00 00 48 3b 05 c8 bb 58 00 7e d7 48
+0x000000005baea15b:   8b 9d e8 00 00 00 48 8d 54 24 48 48 8d 4d 50 e8 
+
+
+Register to memory mapping:
+
+RAX=0x0000000000000007 is an unknown value
+RBX=0x0000000000000007 is an unknown value
+RCX=0x000000610eff9880 is pointing into the stack for thread: 0x0000020445d35000
+RDX=0x0000000000006000 is an unknown value
+RSP=0x000000610efff880 is pointing into the stack for thread: 0x0000020445d35000
+RBP=0x000000610efff980 is pointing into the stack for thread: 0x0000020445d35000
+RSI=0x0000000000000007 is an unknown value
+RDI={method} {0x000002047f76e098} 'run' '()V' in 'java/lang/Thread'
+R8 =0x0000000000000005 is an unknown value
+R9 =0x0000000000000006 is an unknown value
+R10=0x0000020442970230 is an unknown value
+R11={method} {0x000002047f76e098} 'run' '()V' in 'java/lang/Thread'
+R12=0x0000020442a42f80 is an unknown value
+R13=0x000000610efffc50 is pointing into the stack for thread: 0x0000020445d35000
+R14=0x000000610efffb80 is pointing into the stack for thread: 0x0000020445d35000
+R15=0x000000610efff880 is pointing into the stack for thread: 0x0000020445d35000
+
+
+Stack: [0x000000610ef00000,0x000000610f000000],  sp=0x000000610efff880,  free space=1022k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x1ea14b]
+V  [jvm.dll+0x3069b2]
+V  [jvm.dll+0x1eaec4]
+V  [jvm.dll+0x1ead9b]
+V  [jvm.dll+0x15d15d]
+V  [jvm.dll+0x21d555]
