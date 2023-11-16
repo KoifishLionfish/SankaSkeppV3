@@ -142,7 +142,7 @@ public class Cannon {
       } else {
 
         if (direction == Direction.UP) {
-          if (y > 0 && y <= 9) { // if y is 1++
+          if (y > 0 && y <= 9) { // if y is 1+
             y--; // go up once
             if (y > 0) {
               if (isCellBlack(rectangles, x, y) || !isActive(rectangles, x, y)) { // if rectrangle is black or inactive.
