@@ -217,8 +217,6 @@ public class Cannon {
                   if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) { // change direction
                     resetLatestShotListAndPreviousDirection();
                     previousDirection = "LEFT";
-                  } else {
-                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
                   }
                 }
               }
@@ -237,6 +235,9 @@ public class Cannon {
                   previousHit = true;
                   if (shipLength - nrOfHits == 0) {
                     followUpShot(rectangles, x, y, direction);
+                  } else {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "LEFT";
                   }
                 } else { // if cannonball misses
                   if (previousDirection.contains("RIGHT") && isShipHorizontal && nrOfHits > 1) {
@@ -270,8 +271,6 @@ public class Cannon {
                   if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) {
                     resetLatestShotListAndPreviousDirection();
                     previousDirection = "UP";
-                  } else {
-                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
                   }
                 }
               }
@@ -290,6 +289,9 @@ public class Cannon {
                   previousHit = true;
                   if (shipLength - nrOfHits == 0) {
                     followUpShot(rectangles, x, y, direction);
+                  } else { // if ship has not been broken
+                    resetLatestShotListAndPreviousDirection(); // reset latestshotlist to go back to initial
+                    previousDirection = "UP";
                   }
                 } else { // if cannonball misses
                   if (previousDirection.contains("DOWN") && isShipVertical && nrOfHits > 1) {
@@ -323,8 +325,6 @@ public class Cannon {
                   if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) {
                     resetLatestShotListAndPreviousDirection();
                     previousDirection = "RIGHT";
-                  } else {
-                    resetLatestShotListAndPreviousDirection(); // reset latest shotlist, go back to initial shot
                   }
                 }
               }
@@ -341,9 +341,11 @@ public class Cannon {
                   nrOfHits++; // register hit
                   previousDirection = "LEFT";
                   previousHit = true;
-
                   if (shipLength - nrOfHits == 0) {
                     followUpShot(rectangles, x, y, direction);
+                  } else {
+                    resetLatestShotListAndPreviousDirection();
+                    previousDirection = "RIGHT";
                   }
                 } else { // if cannonball misses
                   if (previousDirection.contains("LEFT") && isShipHorizontal && nrOfHits > 1) {
