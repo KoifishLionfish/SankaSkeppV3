@@ -13,6 +13,7 @@ import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -24,17 +25,47 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         StartingBoard startingBoard = new StartingBoard();
-       startingBoard.start(new Stage());
+      startingBoard.start(new Stage());
 
+
+//int x=5;
+//int y=2;
+//String guess;
+//
+//        guess = (x) + "" + (y);
+//        System.out.println(guess);
 
 //        ServerClient testa = new ServerClient(true);
 //        System.out.println(
 //                testa.xFromNewGuess());
 //
 //        System.out.println( testa.yFromNewGuess());
+//
+//        String oldGuess = "m shoot 23";
+//        String[] oldGuessList;
+//        int oldX = 0;
+//        int oldY = 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//        if (oldGuess.contains("i")) {
+//            System.out.println("Finns ingen gammal gissning det här är första");
+//        } else {
+//            oldGuessList=oldGuess.split("");
+//            oldX= Integer.parseInt(oldGuessList[8]);
+//            oldY= Integer.parseInt(oldGuessList[9]);
+//            System.out.println(oldX);
+//            System.out.println(oldY);
+//        }
+
+
+
     }
-
-
 
     public String test() {
 

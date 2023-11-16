@@ -6,16 +6,11 @@ import javafx.scene.layout.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.control.Button;
-
-import java.awt.*;
-import java.util.Random;
 
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
-    private String textLable="osifdhsf";
+    private String textLabel ="Welcome";
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
@@ -168,9 +163,10 @@ public class Board extends Application {
 
 
 
-        //vbox för utskrivt med sake
+        //vbox för utskrivt med saker
         VBox vboxText=new VBox();
-        Label labelText=new Label(textLable);
+        Label labelText=new Label(textLabel);
+        labelText.setText("Miss");
         vboxText.getChildren().add(labelText);
 
 
@@ -207,12 +203,12 @@ public class Board extends Application {
     }
 
 
-    public String getTextLable() {
-        return textLable;
+    public String getTextLabel() {
+        return textLabel;
     }
 
-    public void setTextLable(String textLable) {
-        this.textLable = textLable;
+    public void setTextLabel(String textLabel) {
+        this.textLabel = textLabel;
     }
 }
 
