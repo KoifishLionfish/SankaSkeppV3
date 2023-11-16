@@ -25,87 +25,84 @@ public class Cannon {
   private int verticalRectangles = 0;
   private int totalMisses = 0;
   private int totalHits = 0;
-  private boolean gameOver = false;
   private boolean previousHit = false;
 
 
   // random shot
   public void randomShot(RectangleCell[][] rectangles) {
 
-    if (!gameOver) {
-      // Random number generator
-      Random randomHit = new Random();
-      int x = randomHit.nextInt(10);
-      int y = randomHit.nextInt(10);
 
-      // if no ship has been hit or sunk
-      if (initialHitX.isEmpty() && initialHitY.isEmpty()) {
-        // if rectangle isnt black and isnt hit ship (RED)
-        if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
-          // shoots cannonball
-          cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
+    // Random number generator
+    Random randomHit = new Random();
+    int x = randomHit.nextInt(10);
+    int y = randomHit.nextInt(10);
 
-          if (isHit(rectangles, x, y)) {
-            nrOfHits++; // register hit
-            // save coords
-            initialHitX.add(x);
-            initialHitY.add(y);
-            currentShipX.add(x);
-            currentShipY.add(y);
+    // if no ship has been hit or sunk
+    if (initialHitX.isEmpty() && initialHitY.isEmpty()) {
+      // if rectangle isnt black and isnt hit ship (RED)
+      if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
+        // shoots cannonball
+        cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
 
-
-            shipLength++; // add rectangle to length of ship
+        if (isHit(rectangles, x, y)) {
+          nrOfHits++; // register hit
+          // save coords
+          initialHitX.add(x);
+          initialHitY.add(y);
+          currentShipX.add(x);
+          currentShipY.add(y);
 
 
-            scanShipLength(rectangles, x, y); // scan ship for knowing when its broken later
-            typeOfShip(); // writes what type of ship it is to check for errors
+          shipLength++; // add rectangle to length of ship
 
-          }
-        } else {
-          randomShot(rectangles); // if cell is black or red(hit), shoot again
+
+          scanShipLength(rectangles, x, y); // scan ship for knowing when its broken later
+          typeOfShip(); // writes what type of ship it is to check for errors
+
         }
       } else {
+        randomShot(rectangles); // if cell is black or red(hit), shoot again
+      }
+    } else {
 
-        // if battleship isnt sunk
-        // if list is not empty go back to initial shot:
+      // if battleship isnt sunk
+      // if list is not empty go back to initial shot:
 
 
-        if (previousHit) {
-          x = latestShotX.get(0);
-          y = latestShotY.get(0);
+      if (previousHit) {
+        x = latestShotX.get(0);
+        y = latestShotY.get(0);
 
-          if (previousDirection.contains("RIGHT") && x != 9) {
-            followUpShot(rectangles, x, y, Direction.RIGHT);
-          } else if (previousDirection.contains("LEFT") && x != 0) {
-            followUpShot(rectangles, x, y, Direction.LEFT);
-          } else if (previousDirection.contains("UP") && y != 0) {
-            followUpShot(rectangles, x, y, Direction.UP);
-          } else if (previousDirection.contains("DOWN") && y != 9) {
-            followUpShot(rectangles, x, y, Direction.DOWN);
-          }
-        } else {
-          x = initialHitX.get(0);
-          y = initialHitY.get(0);
+        if (previousDirection.contains("RIGHT") && x != 9) {
+          followUpShot(rectangles, x, y, Direction.RIGHT);
+        } else if (previousDirection.contains("LEFT") && x != 0) {
+          followUpShot(rectangles, x, y, Direction.LEFT);
+        } else if (previousDirection.contains("UP") && y != 0) {
+          followUpShot(rectangles, x, y, Direction.UP);
+        } else if (previousDirection.contains("DOWN") && y != 9) {
+          followUpShot(rectangles, x, y, Direction.DOWN);
+        }
+      } else {
+        x = initialHitX.get(0);
+        y = initialHitY.get(0);
 
-          if (previousDirection.isEmpty()) {
-            aimRandomDirection(rectangles, x, y);
-          } else { // else, if previousDirection has direction
-            if (previousDirection.contains("UP")) {
-              aimUp(rectangles, x, y);
-            } else if (previousDirection.contains("DOWN")) {
-              aimDown(rectangles, x, y);
-            } else if (previousDirection.contains("LEFT")) {
-              aimLeft(rectangles, x, y);
-            } else if (previousDirection.contains("RIGHT")) {
-              aimRight(rectangles, x, y);
-            }
+        if (previousDirection.isEmpty()) {
+          aimRandomDirection(rectangles, x, y);
+        } else { // else, if previousDirection has direction
+          if (previousDirection.contains("UP")) {
+            aimUp(rectangles, x, y);
+          } else if (previousDirection.contains("DOWN")) {
+            aimDown(rectangles, x, y);
+          } else if (previousDirection.contains("LEFT")) {
+            aimLeft(rectangles, x, y);
+          } else if (previousDirection.contains("RIGHT")) {
+            aimRight(rectangles, x, y);
           }
         }
       }
-    } else {
-      gameOver();
     }
   }
+
 
   // follow up shots
   public void followUpShot(RectangleCell[][] rectangles, int x, int y, Direction direction) {
@@ -121,8 +118,7 @@ public class Cannon {
         System.out.println("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
 
         if (numberOfSunkenShips == NUMBER_OF_SHIPS) { // if all ships are sunk
-          gameOver = true;
-          gameOver();
+          inactivateCannon();
           break; // break
         } else { // if there are ships left
 
@@ -366,7 +362,7 @@ public class Cannon {
   }
 
   // Game over
-  public void gameOver() {
+  public void inactivateCannon() {
     int totalShots = (totalMisses + totalHits);
     System.out.println("Congratulations, you have won!");
     System.out.println("Total shots made: " + totalShots);
