@@ -685,7 +685,7 @@ public class Cannon {
     }
 
 
-    public String cannonBallAnswer(Board board, RectangleCell[][] rectangles, int x, int y) {
+    public String cannonBallAnswer(RectangleCell[][] rectangles, int x, int y) {
         //Ger bara svar om hit/miss men uppdaterar inte kartan på my board
         if (isAShip(rectangles, x, y)) {
             return "h ";

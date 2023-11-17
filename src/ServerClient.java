@@ -6,7 +6,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ServerClient implements Runnable {
@@ -201,7 +200,7 @@ public class ServerClient implements Runnable {
 
                             //ska få fram svar om hm på nya gissningen och uppdatera kartan för det
 //-5b)
-                            String answerHitMiss = cannon.cannonBallAnswer(battelBoard.rectangleCells, xNewGuess(), yNewGuess()); //använder cannonballAnswer för att returnera om h/m
+                            String answerHitMiss = cannon.cannonBallAnswer(battelBoard.rectangleCells, xNewGuess(),yNewGuess()); //använder cannonballAnswer för att returnera om h/m
 //-5c)
                             Platform.runLater(cannon.cannonBallAnswerUpdateMap(battelBoard.rectangleCells, xNewGuess(), yNewGuess())); //använder cannonballUpdateMap för att uppdatera vårt spelbräde
                             System.out.println("Svar om hm: " + answerHitMiss);
@@ -213,6 +212,8 @@ public class ServerClient implements Runnable {
                             writer.println(outgoingMessage);                //använder writer för att skicka iväg outgoingmessage till motståndaren som får det som använder reader för att få fram meddelandet
                             System.out.println("jag säger till dig " + outgoingMessage);
                             oldGuess = outgoingMessage; //ger nytt värde till oldGuess så vi kommer ihåg koordinaterna vi gissade på nu i nästa "varv"
+                            battelBoard.appendToConsole(outgoingMessage);
+
 
 
                         }

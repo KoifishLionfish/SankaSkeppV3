@@ -2,16 +2,23 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
+import java.util.LinkedList;
+
 
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
-    private String textLabel ="Welcome";
+    private String textLable ="Welcome";
+    private TextArea consoleTextArea;
+    private final int MAX_GUESSES = 2;
+    private LinkedList<String> recentGuesses = new LinkedList<>();
+
 
 
 
@@ -190,16 +197,20 @@ public class Board extends Application {
             vboxEnemy.getChildren().add(l);
         }
 
+        consoleTextArea = new TextArea();
+        consoleTextArea.setEditable(false);
+        consoleTextArea.setWrapText(true);
+        consoleTextArea.setPrefRowCount(5);
+
 
 
 
 
 
         //vbox för utskrivt med saker
-        VBox vboxText=new VBox();
-        Label labelText=new Label(textLabel);
-        labelText.setText("Miss");
-        vboxText.getChildren().add(labelText);
+        VBox vboxText = new VBox();
+        Label labelText = new Label(textLable);
+        vboxText.getChildren().addAll(labelText, consoleTextArea);
 
 
 
@@ -245,18 +256,26 @@ public class Board extends Application {
 
 
     }
-
-
-
-
-    public String getTextLabel() {
-        return textLabel;
+    public void appendToConsole(String message) {
+        recentGuesses.add(message);
+        if (recentGuesses.size() > MAX_GUESSES) {
+            recentGuesses.removeFirst(); // Remove oldest guess
+        }
+        updateConsole();
+    }
+    private void updateConsole() {
+        StringBuilder text = new StringBuilder();
+        for (String guess : recentGuesses) {
+            text.append(guess).append("\n");
+        }
+        consoleTextArea.setText(text.toString());
     }
 
 
-    public void setTextLabel(String textLabel) {
-        this.textLabel = textLabel;
-    }
+
+
+
+
 }
 
 
