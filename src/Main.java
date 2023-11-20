@@ -12,6 +12,7 @@ import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -26,6 +27,7 @@ public class Main extends Application {
 
     StartingBoard startingBoard = new StartingBoard();
     startingBoard.start(new Stage());
+
 
 
 

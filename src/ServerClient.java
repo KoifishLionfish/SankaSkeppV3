@@ -5,54 +5,46 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ServerClient implements Runnable {
-    private boolean testFörstaGissning = true;
+    //private boolean testFörstaGissning = true;
 
 
     private BufferedReader reader;
     private PrintWriter writer;
     private boolean gameIsRunning = true;
-
-
     private String incomingmessage;
-
-
     private String outgoingMessage;
     private boolean server;
-
-
-    private Cannon cannon = new Cannon();
+    private MyCannon cannon = new MyCannon();
     private int randomTime;
     private String titel;
     private boolean firstGuess = true;
     private Board battelBoard = new Board();
-
-
     private String oldGuess;
     private String[] oldGuessList;
     private int oldX;
     private int oldY;
     int count = 0;
-
+    boolean skjuterPåAktivtSkepp = false;
 
     public ServerClient(boolean server) {
         this.server = server;
     }
 
-
     @Override
     public void run() {
+
         try {
             startGame();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public void startGame() throws Exception {
         if (server) {
@@ -78,9 +70,6 @@ public class ServerClient implements Runnable {
        -6    Generar nytt svar utifrån 5b) och skickar med en ny gissning
        -2b)    Avslutar runnable och skapar en ny tråd ifrån den
         */
-
-
-
 
 //-1
         try {
@@ -127,8 +116,6 @@ public class ServerClient implements Runnable {
             //Man använder runLater när man vill uppdatera kartan/gui
 
 
-
-
             while (gameIsRunning) {
                 Random random = new Random();
                 randomTime = random.nextInt(6001);
@@ -143,22 +130,26 @@ public class ServerClient implements Runnable {
                     System.out.println("my first message is " + outgoingMessage);
                     oldGuess = outgoingMessage; //anger old guess för att spara koordinaterna från gissningen
                     firstGuess = false;
-
-
                 } else {
                     try {
                         if (reader.ready()) {
                             System.out.println("**************************************************************************************************");
 //-4
+
                             incomingmessage = reader.readLine(); //använder vår reader för att ta emot outgoingmessage som motståndaren skickade iväg med sin writer
+//"h shoot 98"
 
-
+//                            try {
+//                                Thread.sleep(2000);
+//                            } catch (InterruptedException e) {
+//                                System.out.println("Could not pause due to:\n" + e.getMessage());
+//                            }
                             //om det är första gissningen och man är server har man ingen gammal gissning man kommer ihåg
                             //annars så tar man oldguess och delar upp till x & y som är ens förra gissnings koordinater som man i den här rundan får svar på om h/m
-                            if (testFörstaGissning && server) {
+                            // if (testFörstaGissning && server) {
+                            if (incomingmessage.startsWith("i")) {
                                 System.out.println("Finns ingen gammal gissning det här är första");
-                                testFörstaGissning = false;
-
+                                // testFörstaGissning = false;
 
                             } else {
                                 oldGuessList = oldGuess.split("");
@@ -167,43 +158,51 @@ public class ServerClient implements Runnable {
                                 System.out.println("hej hej, min förra gissning var " + oldGuess);
                             }
 
-
                             try {
-                                Thread.sleep(randomTime);
+                                Thread.sleep(20);
                             } catch (InterruptedException e) {
                                 System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
 
-
-
-
-                            //Skjuter på vår förra gissning beroende på svaret vi fick om h/m
-                            // använder cannonBallHit
+                            //Skjuter på vår förra gissning beroende på svaret vi fick om h/m/s
+                            // använder cannonBallHit & uppdaterar spelbräde
+                            //cannonBallHitStatusUpdate för att uppdatera och spara infon från skotten
 //-5a)
                             if (incomingmessage.startsWith("m")) {
-                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false));
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false);
                                 System.out.println("ska skjuta på miss på " + oldX + oldY);
 
 
                             } else if (incomingmessage.startsWith("h")) {
-                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true));
+                                skjuterPåAktivtSkepp = true;
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false);
                                 System.out.println("ska skjuta på hit");
+
+                            } else if (incomingmessage.startsWith("s")) {//
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true);
+                                skjuterPåAktivtSkepp = false;
+
                             } else {//om första gissningen har vi inga gamla koordinater att skjuta på än
                                 System.out.println("first guess still");
                             }
 
+                            if (skjuterPåAktivtSkepp) {
+                                cannon.handleFollowUpResult(battelBoard.rectangleCellsEnemy, oldX, oldY);
+                            }
+
 
                             System.out.println("du sa och gissade: " + incomingmessage);
-                            System.out.println("nya xy är: " + xNewGuess() + "" + yNewGuess());
-
-
+                            //   System.out.println("nya xy är: " + xNewGuess() + "" + yNewGuess());
 
 
                             //ska få fram svar om hm på nya gissningen och uppdatera kartan för det
 //-5b)
-                            String answerHitMiss = cannon.cannonBallAnswer(battelBoard.rectangleCells, xNewGuess(), yNewGuess()); //använder cannonballAnswer för att returnera om h/m
+                            String answerHitMiss = cannon.cannonBallAnswer(battelBoard, battelBoard.rectangleCells, xNewGuess(), yNewGuess()); //använder cannonballAnswer för att returnera om h/m
 //-5c)
-                            Platform.runLater(cannon.cannonBallAnswerUpdateMap(battelBoard.rectangleCells, xNewGuess(), yNewGuess())); //använder cannonballUpdateMap för att uppdatera vårt spelbräde
+                            Platform.runLater(cannon.cannonBallUpdateMap(battelBoard.rectangleCells, xNewGuess(), yNewGuess())); //använder cannonballUpdateMap för att uppdatera vårt spelbräde
                             System.out.println("Svar om hm: " + answerHitMiss);
 
 
@@ -213,8 +212,6 @@ public class ServerClient implements Runnable {
                             writer.println(outgoingMessage);                //använder writer för att skicka iväg outgoingmessage till motståndaren som får det som använder reader för att få fram meddelandet
                             System.out.println("jag säger till dig " + outgoingMessage);
                             oldGuess = outgoingMessage; //ger nytt värde till oldGuess så vi kommer ihåg koordinaterna vi gissade på nu i nästa "varv"
-
-
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -232,17 +229,17 @@ public class ServerClient implements Runnable {
     }
 
 
-
-
     public String sendGuess() {
-        //en kort räknare så spelet tar slut någon gång när man testar
-        //Nu är det bara randomShoot men här vi behöver jobba
         String guess;
-        count++;
-        if (count > 5) {
-            gameIsRunning = false;
+        if (incomingmessage != null && incomingmessage.startsWith("s")) {
+            count++;
+            if (count == 10) {
+                gameIsRunning = false;
+                System.out.println("YAAAAAAAAAAAAY");
+            }
         }
-        guess = "shoot " + cannon.randomShotId(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
+        System.out.println("Count: " + count);
+        guess = "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
         return guess;
     }
 
@@ -252,8 +249,6 @@ public class ServerClient implements Runnable {
         //Splittar meddelandet och tar index 8 för att få x
         String[] incomingMessageList = incomingmessage.split("");
         int newX = Integer.parseInt(incomingMessageList[8]);
-
-
         return newX;
     }
 
@@ -268,14 +263,10 @@ public class ServerClient implements Runnable {
 }
 
 
-
-
 //threads
 //När man uppdaterar UI måste det uppdateras på main tråden
 //Det gör man mha Platform.runLater funktionen. Vill göra så mycket kod som möjligt
 //innan så att det bara är det man faktiskt vill göra i main som hamnar i runLater
-
-
 
 
 //                //kan skriva
