@@ -30,17 +30,17 @@ public class RectangleCell {
     }
 
 
-
-
-
-
     //Getters och Setters
+
+
+    public void setIsShipStatus(boolean ship){
+        this.isShip=ship;
+    }
+
     public boolean getIsShip() {
         if (isShip){
-            rectangelCell.setFill(Color.ORANGE);
+           // rectangelCell.setFill(Color.ORANGE);
         }
-
-
         return isShip;
     }
 
@@ -51,9 +51,8 @@ public class RectangleCell {
             rectangelCell.setFill(Color.ORANGE);
         }
         else rectangelCell.setFill(Color.ROYALBLUE);
-
-
     }
+
 
 
     public Rectangle getRectangelCell() {

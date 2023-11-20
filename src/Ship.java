@@ -7,12 +7,12 @@ import java.util.Random;
 
 public class Ship {
 
-
     // Metod för att slumpmässigt placera skepp på spelplanen
     static boolean placeRandomShips(RectangleCell[][] rectangles, int[] shipsPerSize) {
         Random random = new Random();
         int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2};
         int maxAttempts = 500;
+
 
 
         // För varje skeppsstorlek i skeppstorlekslistan
@@ -123,9 +123,6 @@ public class Ship {
             }
         }
     }
-
-
-    ;
 }
 
 

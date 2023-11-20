@@ -7,18 +7,28 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+
 
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
-    private String textLabel ="Welcome";
-
-
+    private String textLabel = "Welcome";
+    private ArrayList<String> shipCoordinates1 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates2 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates3 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates4 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates5 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates6 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates7 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates8 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates9 = new ArrayList<>();
+    private ArrayList<String> shipCoordinates10 = new ArrayList<>();
+    private ArrayList<ArrayList> shipCoordinatesList = new ArrayList<>();
+    private String shipName;
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
-
-
 
 
         primaryStage.setTitle(titel);
@@ -33,8 +43,6 @@ public class Board extends Application {
         String rektangelId;
 
 
-
-
         //Gridpane som placeras i mitten av fönstret med själva spelplanen
         GridPane pane = new GridPane();
 
@@ -46,8 +54,6 @@ public class Board extends Application {
                 pane.add(rectangleCells[i][j].getRectangelCell(), i, j);
 
 
-
-
                 //id för varje rektangel
                 idChar = (char) (65 + j);
                 idNumber = i;
@@ -57,9 +63,10 @@ public class Board extends Application {
 
 
         }
+
+
         int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
-
 
         //från jacob
         if (success) {
@@ -69,8 +76,7 @@ public class Board extends Application {
         }
 
 
-
-
+        /////*******************************************************************************************
         //skriver ut buttons listan för att se om den är rätt
         // for (int row = 0; row < 10; row++) {
         //   System.out.println();
@@ -119,15 +125,11 @@ public class Board extends Application {
         }
 
 
-
-
         //Skapar en borderpane och placerar in vår Gridpane, V&HBox
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(hbox);
         borderPane.setLeft(vbox);
         borderPane.setCenter(pane);
-
-
 
 
         //nytt dubbel---------------------------------------------------------------------
@@ -148,8 +150,6 @@ public class Board extends Application {
 
 
         }
-
-
 
 
         //En hBox som läggs högst upp i fönstret (med position)
@@ -191,19 +191,11 @@ public class Board extends Application {
         }
 
 
-
-
-
-
         //vbox för utskrivt med saker
-        VBox vboxText=new VBox();
-        Label labelText=new Label(textLabel);
+        VBox vboxText = new VBox();
+        Label labelText = new Label(textLabel);
         labelText.setText("Miss");
         vboxText.getChildren().add(labelText);
-
-
-
-
 
 
         BorderPane borderPaneEnemy = new BorderPane();
@@ -214,10 +206,8 @@ public class Board extends Application {
         borderPaneEnemy.setCenter(paneEnemy);
 
 
-
-
         HBox hBoxTotal = new HBox();
-        hBoxTotal.getChildren().addAll(borderPane, borderPaneEnemy,vboxText);
+        hBoxTotal.getChildren().addAll(borderPane, borderPaneEnemy, vboxText);
         hBoxTotal.setSpacing(10);
 
 
@@ -242,12 +232,26 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
     }
 
 
 
+
+    public ArrayList<String> getShipCoordinates1() {
+        return shipCoordinates1;
+    }
+
+    public ArrayList<ArrayList> getShipCoordinatesList() {
+        return shipCoordinatesList;
+    }
+
+    public void setShipCoordinatesList(ArrayList<ArrayList> shipCoordinatesList) {
+        this.shipCoordinatesList = shipCoordinatesList;
+    }
+
+    public void setShipCoordinates1(ArrayList<String> shipCoordinates1) {
+        this.shipCoordinates1 = shipCoordinates1;
+    }
 
     public String getTextLabel() {
         return textLabel;
