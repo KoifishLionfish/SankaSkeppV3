@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ServerClient implements Runnable {
-    private boolean testFörstaGissning = true;
+    //private boolean testFörstaGissning = true;
 
 
     private BufferedReader reader;
@@ -139,11 +139,17 @@ public class ServerClient implements Runnable {
                             incomingmessage = reader.readLine(); //använder vår reader för att ta emot outgoingmessage som motståndaren skickade iväg med sin writer
 //"h shoot 98"
 
+//                            try {
+//                                Thread.sleep(2000);
+//                            } catch (InterruptedException e) {
+//                                System.out.println("Could not pause due to:\n" + e.getMessage());
+//                            }
                             //om det är första gissningen och man är server har man ingen gammal gissning man kommer ihåg
                             //annars så tar man oldguess och delar upp till x & y som är ens förra gissnings koordinater som man i den här rundan får svar på om h/m
-                            if (testFörstaGissning && server) {
+                            // if (testFörstaGissning && server) {
+                            if (incomingmessage.startsWith("i")) {
                                 System.out.println("Finns ingen gammal gissning det här är första");
-                                testFörstaGissning = false;
+                                // testFörstaGissning = false;
 
                             } else {
                                 oldGuessList = oldGuess.split("");
@@ -153,40 +159,35 @@ public class ServerClient implements Runnable {
                             }
 
                             try {
-                                Thread.sleep(10);
+                                Thread.sleep(20);
                             } catch (InterruptedException e) {
                                 System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
 
-                            //Skjuter på vår förra gissning beroende på svaret vi fick om h/m
-                            // använder cannonBallHit
+                            //Skjuter på vår förra gissning beroende på svaret vi fick om h/m/s
+                            // använder cannonBallHit & uppdaterar spelbräde
+                            //cannonBallHitStatusUpdate för att uppdatera och spara infon från skotten
 //-5a)
                             if (incomingmessage.startsWith("m")) {
-                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false,false));
-                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, false,false);
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false);
                                 System.out.println("ska skjuta på miss på " + oldX + oldY);
 
 
                             } else if (incomingmessage.startsWith("h")) {
                                 skjuterPåAktivtSkepp = true;
-                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true,false));
-                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true,false);
-//                                cannon.saveDataHit(battelBoard.rectangleCellsEnemy, oldX, oldY);
-
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false);
                                 System.out.println("ska skjuta på hit");
-                            } else if (incomingmessage.startsWith("s")) {
-//                                cannon.saveDataHit(battelBoard.rectangleCellsEnemy, oldX, oldY);
-                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true,true));
-                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true,true);
 
-//                                cannon.omSänktskepp(battelBoard.rectangleCellsEnemy);
+                            } else if (incomingmessage.startsWith("s")) {//
+                                Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true));
+                                cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true);
                                 skjuterPåAktivtSkepp = false;
+
                             } else {//om första gissningen har vi inga gamla koordinater att skjuta på än
                                 System.out.println("first guess still");
                             }
-
-
-
 
                             if (skjuterPåAktivtSkepp) {
                                 cannon.handleFollowUpResult(battelBoard.rectangleCellsEnemy, oldX, oldY);
@@ -230,10 +231,10 @@ public class ServerClient implements Runnable {
 
     public String sendGuess() {
         String guess;
-        if(incomingmessage != null && incomingmessage.startsWith("s")){
+        if (incomingmessage != null && incomingmessage.startsWith("s")) {
             count++;
-            if (count==10){
-                gameIsRunning=false;
+            if (count == 10) {
+                gameIsRunning = false;
                 System.out.println("YAAAAAAAAAAAAY");
             }
         }

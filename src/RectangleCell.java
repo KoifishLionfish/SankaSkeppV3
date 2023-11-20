@@ -18,19 +18,10 @@ public class RectangleCell {
     private Rectangle rectangelCell = new Rectangle(25, 25);
 
 
-    //Konstruktor
-
-
-    //Här är basen för hur en rektangel ser ut och vill man ändra ex
-    //färg för att det är ett skepp så ändrar man i get/set för boolean
-    // för ex isSHip så när man sätter isShip=true, ändras färgen samtidigt
     public RectangleCell() {
         rectangelCell.setFill(Color.ROYALBLUE);
         rectangelCell.setStroke(Color.BLACK);
     }
-
-
-    //Getters och Setters
 
 
     public void setIsShipStatus(boolean ship){
@@ -44,7 +35,6 @@ public class RectangleCell {
         return isShip;
     }
 
-
     public void setIsShip(boolean ship) {
         isShip = ship;
         if (isShip){
@@ -53,12 +43,9 @@ public class RectangleCell {
         else rectangelCell.setFill(Color.ROYALBLUE);
     }
 
-
-
     public Rectangle getRectangelCell() {
         return rectangelCell;
     }
-
 
     public void setRectangelCell(Rectangle rectangelCell) {
         this.rectangelCell = rectangelCell;

@@ -29,23 +29,6 @@ public class MyCannon {
     private boolean previousHit = false;
     private String guess;
 
-    private boolean isShipSunk;
-
-    //******************************************************************************
-    public String randomShotId(RectangleCell[][] rectangles) {
-        // Förenklat randomShot för att bara få random koordinater
-        Random randomHit = new Random();
-        int x = randomHit.nextInt(10);
-        int y = randomHit.nextInt(10);
-
-
-        if (isCellBlack(rectangles, x, y)) {
-            randomShotId(rectangles);
-        }
-
-        return (x) + "" + (y);
-    }
-    //******************************************************************************
 
     // random shot
     public String randomShot(RectangleCell[][] rectangles) {
@@ -67,22 +50,11 @@ public class MyCannon {
 
                 cannonBall(rectangles, x, y); // if miss turn black if hits turn red.
 
-
-                //ska sparas hos motståndaren när han skjuter på sitt bräde
-                //fast även hos migsjälv när jag skjuter utifrån svar hm
-//                if (isHit(rectangles, x, y)) {
-//                    //saveDataHit*
-//                }
             } else {
                 randomShot(rectangles); // if cell is black or red(hit), shoot again
             }
         } else {
 
-            // if battleship isnt sunk
-            // if list is not empty go back to initial shot:
-
-// spara koden ovanför i en egen metod? och hämta den för att använda i den här när man ska få fram nya koordinater
-            //typ boolean om hela skeppet är sänkt eller inte så fortsätter vi med den här kod delen till det är det
 
             if (previousHit && !latestShotX.isEmpty()) {
                 x = latestShotX.get(0);
@@ -100,14 +72,7 @@ public class MyCannon {
             } else {
                 x = initialHitX.get(0);
                 y = initialHitY.get(0);
-//                if (previousDirection != null) {
-//                    x = initialHitX.get(initialHitX.size() - 1);
-//                    y = initialHitY.get(initialHitY.size() - 1);
-//                }
 
-
-//                x = initialHitX.get(0);
-//                y = initialHitY.get(0);
 
                 for (int i : initialHitX) {
                     System.out.println("initalhit x: " + i);
@@ -134,13 +99,10 @@ public class MyCannon {
         return guess;
     }
 
-
     // follow up shots
-
 
     public void followUpShot(RectangleCell[][] rectangles, int x, int y, Direction direction) {
 
-        //  for (int tries = 0; tries < 1; tries++) {
 //omsänktskepp
 
         if (direction == Direction.UP) {
@@ -523,20 +485,6 @@ public class MyCannon {
         }
     }
 
-//    public void cannonBall(RectangleCell[][] rectangles, int x, int y) {
-//        Rectangle cell = rectangles[x][y].getRectangelCell();
-//        String cellId = rectangles[x][y].getRectangleId();
-//        if (isAShip(rectangles, x, y)) {
-//            cell.setFill(Color.RED);
-//            System.out.println("Shot hit at: " + cellId);
-//            totalHits++; // count hit
-//        } else {
-//            cell.setFill(Color.BLACK);
-//            System.out.println("Shot missed at: " + cellId);
-//            totalMisses++; // count miss
-//        }
-//    }
-
     public void cannonBall(RectangleCell[][] rectangles, int x, int y) {
         guess = (x) + "" + (y);
     }
@@ -556,21 +504,13 @@ public class MyCannon {
                 Rectangle cell = rectangles[x][y].getRectangelCell();
 
                 if (hit) {
-//                    rectangles[x][y].setIsShipStatus(true);
                     cell.setFill(Color.RED);
-//                    saveDataHit(rectangles, x, y);
-//                    if (sink) {
-//                        omSänktskepp(rectangles);
-//                    }
                 } else {
-//                    rectangles[x][y].setIsShipStatus(false);
                     cell.setFill(Color.BLACK);
                 }
             }
         };
-
         return runnableToReturn;
-
     }
 
 
@@ -624,13 +564,8 @@ public class MyCannon {
     // Check color of rectangle
 
     public boolean isHit(RectangleCell[][] rectangles, int x, int y) {
-        // !isACtive && isShip
 
-        //  Rectangle cell = rectangles[x][y].getRectangelCell();
-
-        return rectangles[x][y].getIsShip();// && !rectangles[x][y].getIsActive();
-
-//        return cell.getFill() == Color.RED;
+        return rectangles[x][y].getIsShip();
     }
 
     public boolean isCellBlack(RectangleCell[][] rectangles, int x, int y) {
@@ -868,26 +803,14 @@ public class MyCannon {
         System.out.println("Edge NOT reached: x: " + x + ", y: " + y + ", dir: " + direction);
         if (isHit(rectangles, x, y)) { // if it hits a ship
             nrOfHits++; // add hit
-            //previousDirection = String.valueOf(direction);
-            //previousDirection = direction;
+
             addLatestXandY(x, y); // save latest coordinates
             previousHit = true;
-//            if (shipLength - nrOfHits == 0) { // if ship is broken
-//               // followUpShot(rectangles, x, y, direction); // re run method
-//            }
+
         } else { // if cannonball misses
             if (direction == Direction.UP || direction == Direction.DOWN) {
 
-
                 riktningPåSkepp = Boolean.FALSE.equals(isShipHorizontal());
-                // TODO: nån skillnad?
-
-//               if (isShipHorizontal() == null) {
-//                   riktningPåSkepp = null;
-//               } else {
-//                   riktningPåSkepp = Boolean.FALSE.equals(isShipHorizontal());
-//               }
-
 
             } else {
                 riktningPåSkepp = isShipHorizontal();
@@ -895,15 +818,9 @@ public class MyCannon {
             resetLatestShotListAndPreviousDirection();
 
             if (previousDirection == direction && Boolean.TRUE.equals(riktningPåSkepp)) {
-              //  resetLatestShotListAndPreviousDirection(); // Reset LatestShot
+                //  resetLatestShotListAndPreviousDirection(); // Reset LatestShot
                 previousDirection = direction.opposite();
             }
-
-//            if (previousDirection == direction && riktningPåSkepp) {// && nrOfHits > 1) { //ska fixa horisont
-//                resetLatestShotListAndPreviousDirection(); // Reset LatestShot
-//
-//                previousDirection = Direction.random(); // direction.opposite(); // change direction to down to go opposite direction in randomShot
-//            }
         }
     }
 
@@ -918,15 +835,7 @@ public class MyCannon {
         System.out.println("Edge reached: x: " + x + ", y: " + y + ", dir: " + direction);
         if (isHit(rectangles, x, y)) { // if it hits a ship
             nrOfHits++; // register hit
-            //previousDirection = direction; // previous direction was up
             previousHit = true;
-//            if (shipLength - nrOfHits == 0) { // if ship is broken
-//                // followUpShot(rectangles, x, y, direction); // re run the method.
-//            } else { // if ship has not been broken
-//                resetLatestShotListAndPreviousDirection(); // Reset LatestShotList to go back to initial hit
-//                previousDirection = direction.opposite(); // change direction  to Down
-//            }
-
 
             resetLatestShotListAndPreviousDirection();
             previousDirection = direction.opposite();
@@ -937,7 +846,6 @@ public class MyCannon {
             } else {
                 riktningPåSkepp = isShipHorizontal();
             }
-
 
             if (previousDirection == direction && Boolean.TRUE.equals(riktningPåSkepp)) {// && nrOfHits > 1) {
                 resetLatestShotListAndPreviousDirection();
@@ -958,10 +866,6 @@ public class MyCannon {
 
         System.out.println("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
 
-//        if (numberOfSunkenShips == NUMBER_OF_SHIPS) { // if all ships are sunk
-//            inactivateCannon();
-//        } else { // if there are ships left
-
         // resetting
         initialHitX.clear();
         initialHitY.clear();
@@ -977,7 +881,6 @@ public class MyCannon {
         previousDirection = null;
         resetLatestShotListAndPreviousDirection();
 
-//        }
     }
 
     public boolean isPreviousHit() {
@@ -985,12 +888,6 @@ public class MyCannon {
     }
 
     public boolean isShipSunk(RectangleCell[][] rectangleCells, int x, int y) {
-        /*todo
-            vi ska göra loooopar och kolla om finns skeppsdel i närheten.... om
-
-            ska köra finnsFlerSKepp för up,ner osv
-
-      */
 
         //om det inte finns fler aktiva skeppsdelar åt något håll returnera true
         //aka om det inte finns fler gula celler
