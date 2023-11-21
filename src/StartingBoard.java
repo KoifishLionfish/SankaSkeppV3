@@ -57,8 +57,7 @@ public class StartingBoard extends Application {
 
 
         Label select = new Label("");
-        select.setId("selectBtn");
-        select.setFont(Font.font("Verdana", 14));
+
 
 
         //lägger till i buttonvbox och skapar Id för objekt
