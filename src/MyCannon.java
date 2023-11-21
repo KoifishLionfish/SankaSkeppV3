@@ -36,7 +36,6 @@ public class MyCannon {
         System.out.println("randomShot: latestShotX:" + latestShotX + ", latestShotY" + latestShotY);
 
 
-
         // Random number generator
         Random randomHit = new Random();
         int x = randomHit.nextInt(10);
