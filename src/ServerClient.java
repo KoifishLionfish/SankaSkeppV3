@@ -173,6 +173,11 @@ public class ServerClient implements Runnable {
 //-5a)
                             if (incomingmessage.startsWith("m")) {
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false));
+                                try {
+                                    Thread.sleep(2);
+                                } catch (InterruptedException e) {
+                                    System.out.println("Could not pause due to:\n" + e.getMessage());
+                                }
                                 cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false);
                                // System.out.println("ska skjuta på miss på " + oldX + oldY);
 
@@ -180,11 +185,21 @@ public class ServerClient implements Runnable {
                             } else if (incomingmessage.startsWith("h")) {
                                 skjuterPåAktivtSkepp = true;
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false));
+                                try {
+                                    Thread.sleep(2);
+                                } catch (InterruptedException e) {
+                                    System.out.println("Could not pause due to:\n" + e.getMessage());
+                                }
                                 cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false);
                                 //System.out.println("ska skjuta på hit");
 
                             } else if (incomingmessage.startsWith("s")) {//
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true));
+                                try {
+                                    Thread.sleep(2);
+                                } catch (InterruptedException e) {
+                                    System.out.println("Could not pause due to:\n" + e.getMessage());
+                                }
                                 cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true);
                                 skjuterPåAktivtSkepp = false;
 
