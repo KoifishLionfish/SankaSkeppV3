@@ -1,26 +1,15 @@
 import javafx.application.Application;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 
-
-import java.awt.*;
 import java.util.Objects;
-import java.util.Random;
+
 
 
 public class StartingBoard extends Application {
@@ -110,16 +99,6 @@ public class StartingBoard extends Application {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-
-    public boolean getServer() {
-        return server;
-    }
-
-
-    public void setServer(boolean server) {
-        this.server = server;
     }
 }
 

@@ -1,13 +1,9 @@
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ServerClient implements Runnable {
@@ -29,16 +25,12 @@ public class ServerClient implements Runnable {
     private String[] oldGuessList;
     private int oldX;
     private int oldY;
-    int count = 0;
     boolean skjuterPåAktivtSkepp = false;
     String answerHitMiss;
 
     public ServerClient(boolean server) {
         this.server = server;
     }
-
-    String letters="abcdefghij";
-    final String[]letterNumberList=letters.split("");
 
     @Override
     public void run() {
@@ -204,7 +196,7 @@ public class ServerClient implements Runnable {
 
 
                             try {
-                                Thread.sleep(20);
+                                Thread.sleep(2000);
                             } catch (InterruptedException e) {
                                 System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
@@ -249,7 +241,6 @@ public class ServerClient implements Runnable {
             guess = answerHitMiss;
                    System.out.println("jag förlorade");
                    battelBoard.appendToConsole("Jag förlorade.");
-                    Board.mediaPlayer.stop();
             gameIsRunning = false;
         }
 
@@ -262,7 +253,6 @@ public class ServerClient implements Runnable {
             guess = answerHitMiss + "shoot " + guessIndexSplit[0]+indexYAsLetter;
 
             // guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
-            //todo ska fixa så randomshot returnerar en siffra på andra index (1,b)
         }
         return guess;
     }
@@ -291,42 +281,11 @@ public class ServerClient implements Runnable {
         // ex String incomingmessage = "h shoot 09";
         //Splittar meddelandet och tar index 9 för att få y
         String[] incomingMessageList = incomingmessage.split("");
-      //  int newY = Integer.parseInt(incomingMessageList[9]);
         int newY = Letters.valueOf((incomingMessageList[9])).ordinal();
 
         return newY;
     }
 }
-
-
-//threads
-//När man uppdaterar UI måste det uppdateras på main tråden
-//Det gör man mha Platform.runLater funktionen. Vill göra så mycket kod som möjligt
-//innan så att det bara är det man faktiskt vill göra i main som hamnar i runLater
-
-
-//                //kan skriva
-//                Runnable namn = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //vad vi vill göra här
-//                    }
-//                };
-////-------------------------------------------------
-//
-//                //Kan skrivas om med lambda till
-//                Runnable namne = () -> {
-//                    //vad vi vill göra här
-//                };
-//
-
-
-//                // sen skapar man en ny tråd och anger runnable i new Thread()
-
-
-//                Thread threadUpdate = new Thread(namn);
-//                threadUpdate.start();
-
 
 
 

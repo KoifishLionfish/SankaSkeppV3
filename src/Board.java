@@ -5,45 +5,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
-    private String textLabel = "Welcome";
-    private ArrayList<String> shipCoordinates1 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates2 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates3 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates4 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates5 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates6 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates7 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates8 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates9 = new ArrayList<>();
-    private ArrayList<String> shipCoordinates10 = new ArrayList<>();
-    private ArrayList<ArrayList> shipCoordinatesList = new ArrayList<>();
-    private String shipName;
     private String textLable ="Console output: ";
     private TextArea consoleTextArea;
     private final int MAX_GUESSES = 10;
     private LinkedList<String> recentGuesses = new LinkedList<>();
-    static String audioFilePath = "src/audio.mp3";
-
-    static Media sound = new Media(new File(audioFilePath).toURI().toString());
-    static MediaPlayer mediaPlayer = new MediaPlayer(sound);
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
-
-        mediaPlayer.play();
 
         primaryStage.setTitle(titel);
         primaryStage.setHeight(350);
@@ -78,20 +55,7 @@ public class Board extends Application {
 
         }
 
-//orginalkod för att placer ut skepp
-//        int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-//        boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
-//
-//        //från jacob
-//        if (success) {
-//            System.out.println("Ships placed successfully!");
-//        } else {
-//            System.out.println("Failed to place ships.");
-//        }
 
-
-
-        //***************************************************
         //testar att loopa igenom placering av skepp
         boolean success=false;
         int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -104,15 +68,6 @@ public class Board extends Application {
                 System.out.println("Misslyckades med att placera skepp");
             }
         }
-
-        /////*******************************************************************************************
-        //skriver ut buttons listan för att se om den är rätt
-        // for (int row = 0; row < 10; row++) {
-        //   System.out.println();
-        // for (int col = 0; col < 10; col++) {
-        //    System.out.print(rectangles[row][col].getText() + " ");
-        //      }
-        // }
 
 
         //En hBox som läggs högst upp i fönstret (med position)
@@ -131,8 +86,6 @@ public class Board extends Application {
             l.setText(place + i);
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
-//            Rectangle r = new Rectangle(50, 50);
-//            r.setFill(Color.CADETBLUE);
             hbox.getChildren().addAll(l);
         }
 
@@ -148,11 +101,8 @@ public class Board extends Application {
             l.setText(String.valueOf(ascii));
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
-            //  Rectangle r = new Rectangle(50, 50);
-            //r.setFill(Color.CADETBLUE);
             vbox.getChildren().add(l);
         }
-
 
         //Skapar en borderpane och placerar in vår Gridpane, V&HBox
         BorderPane borderPane = new BorderPane();
@@ -197,8 +147,6 @@ public class Board extends Application {
             l.setText(place + i);
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
-//            Rectangle r = new Rectangle(50, 50);
-//            r.setFill(Color.CADETBLUE);
             hboxEnemy.getChildren().addAll(l);
         }
 
@@ -214,8 +162,6 @@ public class Board extends Application {
             l.setText(String.valueOf(ascii));
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
-            //  Rectangle r = new Rectangle(50, 50);
-            //r.setFill(Color.CADETBLUE);
             vboxEnemy.getChildren().add(l);
         }
 
@@ -247,19 +193,6 @@ public class Board extends Application {
         Scene scene = new Scene(hBoxTotal);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
-//        Scene scene = new Scene(borderPaneEnemy);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-        //-----------------
-
-
-//        Scene scene = new Scene(borderPane);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-
-
     }
 
 
@@ -279,34 +212,6 @@ public class Board extends Application {
             text.append(guess).append("\n");
         }
         consoleTextArea.setText(text.toString());
-    }
-
-
-
-
-    public ArrayList<String> getShipCoordinates1() {
-        return shipCoordinates1;
-    }
-
-    public ArrayList<ArrayList> getShipCoordinatesList() {
-        return shipCoordinatesList;
-    }
-
-    public void setShipCoordinatesList(ArrayList<ArrayList> shipCoordinatesList) {
-        this.shipCoordinatesList = shipCoordinatesList;
-    }
-
-    public void setShipCoordinates1(ArrayList<String> shipCoordinates1) {
-        this.shipCoordinates1 = shipCoordinates1;
-    }
-
-    public String getTextLabel() {
-        return textLabel;
-    }
-
-
-    public void setTextLabel(String textLabel) {
-        this.textLabel = textLabel;
     }
 }
 

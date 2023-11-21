@@ -24,17 +24,10 @@
 }
 
 #startlabel{
-    -fx-stroke: black; /* Outline color */
-    -fx-stroke-width: 2; /* Outline width */
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
     -fx-padding: 0 0 0 0;
     -fx-margin: -20px 0 0 0;
-}
-
-.outlined-text{
-    -fx-fill: white; /* Text color */
-    -fx-stroke: black; /* Outline color */
-    -fx-stroke-width: 2; /* Outline width */
-    -fx-font-size: 33px; /* Font size */
 }
 
 .label{
