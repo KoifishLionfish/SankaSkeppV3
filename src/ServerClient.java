@@ -26,7 +26,7 @@ public class ServerClient implements Runnable {
     private String incomingmessage;
     private String outgoingMessage;
     private boolean server;
-    private Cannon cannon = new Cannon();
+    private MyCannon cannon = new MyCannon();
     private int randomTime;
     private String titel;
     private boolean firstGuess = true;

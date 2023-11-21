@@ -6,7 +6,8 @@ import java.util.*;
 
 
 //++ Fredrik L
-public class Cannon {
+
+public class MyCannon {
   private final List<Integer> initialHitX = new ArrayList<>();
   private final List<Integer> initialHitY = new ArrayList<>();
   private final List<Integer> latestShotX = new ArrayList<>();
