@@ -129,7 +129,8 @@ public class ServerClient implements Runnable {
                 //börja gissa alltså skicka iväg data
 //-3
                 if (firstGuess && !server) {
-                    outgoingMessage = "i " + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy);  //säger vad som ska finnas i outgoingMessage
+                  //  outgoingMessage = "i " + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy);  //säger vad som ska finnas i outgoingMessage
+                    outgoingMessage = "i " + "shoot " + sendFirstGuess();  //säger vad som ska finnas i outgoingMessage
                     writer.println(outgoingMessage);        //sätter in outgoinmessage i vår writer och skickar iväg meddelandet
                     System.out.println("my first message is " + outgoingMessage);
                     oldGuess = outgoingMessage; //anger old guess för att spara koordinaterna från gissningen
@@ -158,9 +159,11 @@ public class ServerClient implements Runnable {
 
                             } else {
                                 oldGuessList = oldGuess.split("");
+                                System.out.println("oldguess: "+oldGuess);
                                 oldX = Integer.parseInt(oldGuessList[8]);
-                                oldY = Integer.parseInt(oldGuessList[9]);
-
+                                //oldY = Integer.parseInt(oldGuessList[9]);
+                              oldY = Letters.valueOf((oldGuessList[9])).ordinal();
+                                System.out.println("Oldguess y: "+oldY);
                                 System.out.println("hej hej, min förra gissning var " + oldGuess);
                             }
 
@@ -246,11 +249,24 @@ public class ServerClient implements Runnable {
         }
 
         else {
-            guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
-
-        //todo ska fixa så randomshot returnerar en siffra på andra index (1,b)
+            String []guessIndexSplit=cannon.randomShot(battelBoard.rectangleCellsEnemy).split(""); //delar upp xy
+            String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));//omvandlar y till bokstav
+            System.out.println("y som bokstav: "+indexYAsLetter);
+          //  guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
+            guess = answerHitMiss + "shoot " + guessIndexSplit[0]+indexYAsLetter;
+            //todo ska fixa så randomshot returnerar en siffra på andra index (1,b)
         }
         return guess;
+    }
+
+    public String sendFirstGuess(){
+        String firstGuess;
+        String []guessIndexSplit=cannon.randomShot(battelBoard.rectangleCellsEnemy).split(""); //delar upp xy
+        String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));//omvandlar y till bokstav
+        System.out.println("y som bokstav: "+indexYAsLetter);
+        firstGuess=guessIndexSplit[0]+indexYAsLetter;
+
+        return firstGuess;
     }
 
 
@@ -267,7 +283,9 @@ public class ServerClient implements Runnable {
         // ex String incomingmessage = "h shoot 09";
         //Splittar meddelandet och tar index 9 för att få y
         String[] incomingMessageList = incomingmessage.split("");
-        int newY = Integer.parseInt(incomingMessageList[9]);
+      //  int newY = Integer.parseInt(incomingMessageList[9]);
+        int newY = Letters.valueOf((incomingMessageList[9])).ordinal();
+
         return newY;
     }
 }

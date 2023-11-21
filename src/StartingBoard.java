@@ -77,6 +77,8 @@ public class StartingBoard extends Application {
                     primaryStage.close();
                     System.out.println("is server: " + server);
                     ServerClient serverClient = new ServerClient(server);
+                   // ServerClientFunkarHeltOrörd serverClient = new ServerClientFunkarHeltOrörd(server);
+
                     try {
                         serverClient.run();
                     } catch (Exception e) {

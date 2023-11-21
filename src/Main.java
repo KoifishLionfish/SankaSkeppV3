@@ -30,30 +30,42 @@ public class Main extends Application {
     startingBoard.start(new Stage());
 
 
+//har kvar guess xy i cannon
+        //testar ändrar y när man är i sendguess metoden
 
-
-
-        //i cannon ser en gissning ut 12 nu
-        //ska göra så det blir 1c
-        int x = 1;
-        int y = 2;
-        String guess;
-        guess = (x) + "" + Letters.intToLetter(y);
-        // System.out.println(guess);
-
-
-//i server client
-        //ser ut "m shoot 1c
-        //vill få till 12
-
-        String guesstest = "m shoot 1c";
+        String randomshooot="2"+"3";
+        String []guessIndexSplit=randomshooot.split("");
+        String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));
+        System.out.println(indexYAsLetter);
 //
-        //Delar upp gamla gissningen
-        String[] oldGuessList = guesstest.split("");
-        int oldX = Integer.parseInt(oldGuessList[8]);
-        int oldY = Letters.valueOf((oldGuessList[9])).ordinal();
+//
+//        String gissning= "h "+"shoot "+guessIndexSplit[0]+indexYAsLetter;
+//        System.out.println(gissning);
 
 
-        System.out.println("odlx: "+oldX+"oldY: "+oldY);
+
+
+//        //i cannon ser en gissning ut 12 nu
+//        //ska göra så det blir 1c
+//        int x = 1;
+//        int y = 2;
+//        String guess;
+//        guess = (x) + "" + Letters.intToLetter(y);
+//        // System.out.println(guess);
+//
+//
+////i server client
+//        //ser ut "m shoot 1c
+//        //vill få till 12
+//
+//        String guesstest = "m shoot 1c";
+////
+//        //Delar upp gamla gissningen
+//        String[] oldGuessList = guesstest.split("");
+//        int oldX = Integer.parseInt(oldGuessList[8]);
+//        int oldY = Letters.valueOf((oldGuessList[9])).ordinal();
+//
+//
+//        System.out.println("odlx: "+oldX+"oldY: "+oldY);
     }
 }

@@ -11,6 +11,8 @@ public enum Letters {
     g('6'),
     h('7'),
     i('8'),
+
+    //  i('8'),
     j('9');
 
 
@@ -34,8 +36,14 @@ public enum Letters {
             return "e";
         } else if (y == 5) {
             return "f";
-        } else {
+        } else if (y == 6) {
             return "g";
+        } else if (y == 7) {
+            return "h";
+        } else if (y == 8) {
+            return "i";
+        } else {
+            return "j";
         }
     }
 }

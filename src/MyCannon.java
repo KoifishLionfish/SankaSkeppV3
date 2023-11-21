@@ -46,7 +46,7 @@ public class MyCannon {
             // if rectangle isnt black and isnt hit ship (RED) & is active
             if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
                 guess = (x) + "" + (y);
-
+               // guess = (x) + "" + Letters.intToLetter(y);
 
             } else {
                 randomShot(rectangles); // if cell is black or red(hit), shoot again
@@ -114,7 +114,8 @@ public class MyCannon {
                         randomShot(rectangles); // if its black or inactive, shoot again. IT SHOULD NOT SHOOT AGAIN
                     } else { // if its not black and not inactive
 
-                        guess = (x) + "" + (y);
+                       guess = (x) + "" + (y);
+                      //  guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.UP;
                         //handleFollowUpResult();
                     }
@@ -128,7 +129,7 @@ public class MyCannon {
                             randomShot(rectangles); // shoot somehwere else
                         }
                         guess = (x) + "" + (y);
-
+                       // guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.UP;
                     }
@@ -144,6 +145,7 @@ public class MyCannon {
                     } else { // if its not black
 
                         guess = (x) + "" + (y);
+                        //guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.RIGHT;
                         //handleFollowUpResult();
                     }
@@ -157,6 +159,7 @@ public class MyCannon {
                         }
 
                         guess = (x) + "" + (y);
+                       // guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.RIGHT;
                     }
@@ -172,6 +175,7 @@ public class MyCannon {
                     } else { // if its not black
 
                         guess = (x) + "" + (y);
+                        //guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.DOWN;
                         //handleFollowUpResult();
                     }
@@ -185,6 +189,7 @@ public class MyCannon {
                         }
 
                         guess = (x) + "" + (y);
+                        //guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.DOWN;
                         //handleFollowUpResultAgain();
                     }
@@ -200,6 +205,7 @@ public class MyCannon {
                     } else { // if its not black
 
                         guess = (x) + "" + (y);
+                       // guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.LEFT;
                         //handleFollowUpResult();
                     }
@@ -212,6 +218,7 @@ public class MyCannon {
                             randomShot(rectangles);
                         }
                         guess = (x) + "" + (y);
+                      //  guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.LEFT;
                     }
