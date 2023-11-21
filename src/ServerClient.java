@@ -248,6 +248,7 @@ public class ServerClient implements Runnable {
             gameIsRunning = false;
         }
 
+
         else {
             String []guessIndexSplit=cannon.randomShot(battelBoard.rectangleCellsEnemy).split(""); //delar upp xy
             String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));//omvandlar y till bokstav
