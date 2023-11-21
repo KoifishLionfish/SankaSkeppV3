@@ -144,6 +144,8 @@ public class ServerClient implements Runnable {
                             incomingmessage = reader.readLine(); //använder vår reader för att ta emot outgoingmessage som motståndaren skickade iväg med sin writer
                             if (incomingmessage.equals("game over")) {
                                 System.out.println("Yaaay, jag vann");
+                                battelBoard.appendToConsole("You have won! Congratulations!");
+
 
                                 break;
                             }
@@ -222,6 +224,7 @@ public class ServerClient implements Runnable {
                             writer.println(outgoingMessage);                //använder writer för att skicka iväg outgoingmessage till motståndaren som får det som använder reader för att få fram meddelandet
                             System.out.println("jag säger till dig " + outgoingMessage);
                             oldGuess = outgoingMessage; //ger nytt värde till oldGuess så vi kommer ihåg koordinaterna vi gissade på nu i nästa "varv"
+                            battelBoard.appendToConsole(outgoingMessage);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -245,6 +248,8 @@ public class ServerClient implements Runnable {
         if (answerHitMiss.equals("game over")) {
             guess = answerHitMiss;
                    System.out.println("jag förlorade");
+                   battelBoard.appendToConsole("Jag förlorade.");
+                    Board.mediaPlayer.stop();
             gameIsRunning = false;
         }
 

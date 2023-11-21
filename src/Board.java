@@ -2,12 +2,17 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class Board extends Application {
@@ -26,10 +31,19 @@ public class Board extends Application {
     private ArrayList<String> shipCoordinates10 = new ArrayList<>();
     private ArrayList<ArrayList> shipCoordinatesList = new ArrayList<>();
     private String shipName;
+    private String textLable ="Console output: ";
+    private TextArea consoleTextArea;
+    private final int MAX_GUESSES = 10;
+    private LinkedList<String> recentGuesses = new LinkedList<>();
+    static String audioFilePath = "src/audio.mp3";
+
+    static Media sound = new Media(new File(audioFilePath).toURI().toString());
+    static MediaPlayer mediaPlayer = new MediaPlayer(sound);
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
 
+        mediaPlayer.play();
 
         primaryStage.setTitle(titel);
         primaryStage.setHeight(350);
@@ -205,12 +219,16 @@ public class Board extends Application {
             vboxEnemy.getChildren().add(l);
         }
 
+        consoleTextArea = new TextArea();
+        consoleTextArea.setEditable(false);
+        consoleTextArea.setWrapText(true);
+        consoleTextArea.setPrefRowCount(5);
+
 
         //vbox för utskrivt med saker
         VBox vboxText = new VBox();
-        Label labelText = new Label(textLabel);
-        labelText.setText("Miss");
-        vboxText.getChildren().add(labelText);
+        Label labelText = new Label(textLable);
+        vboxText.getChildren().addAll(labelText, consoleTextArea);
 
 
         BorderPane borderPaneEnemy = new BorderPane();
@@ -247,6 +265,20 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+    }
+    public void appendToConsole(String message) {
+        recentGuesses.add(message);
+        if (recentGuesses.size() > MAX_GUESSES) {
+            recentGuesses.removeFirst(); // Remove oldest guess
+        }
+        updateConsole();
+    }
+    private void updateConsole() {
+        StringBuilder text = new StringBuilder();
+        for (String guess : recentGuesses) {
+            text.append(guess).append("\n");
+        }
+        consoleTextArea.setText(text.toString());
     }
 
 
