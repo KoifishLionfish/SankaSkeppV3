@@ -56,7 +56,7 @@ public class Board extends Application {
 
         primaryStage.setTitle(titel);
         primaryStage.setHeight(350);
-        primaryStage.setWidth(700);
+        primaryStage.setWidth(720);
 
 
         rectangleCells = new RectangleCell[10][10];
@@ -142,7 +142,7 @@ public class Board extends Application {
             char ascii = (char) (65 + i);
             Label l = new Label();
             l.setAlignment(Pos.CENTER_LEFT);
-            l.setPrefSize(25, 25);
+            l.setPrefSize(23, 25);
             l.setText(String.valueOf(ascii));
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
@@ -185,6 +185,7 @@ public class Board extends Application {
         emptyLabel = new Label();
         emptyLabel.setPrefSize(25, 25);
         hboxEnemy.getChildren().add(emptyLabel);
+
         for (int i = 0; i < 10; i++) {
             String place = "";
 
@@ -208,7 +209,7 @@ public class Board extends Application {
             char ascii = (char) (65 + i);
             Label l = new Label();
             l.setAlignment(Pos.CENTER_LEFT);
-            l.setPrefSize(25, 25);
+            l.setPrefSize(20, 25);
             l.setText(String.valueOf(ascii));
             l.setAlignment(Pos.BASELINE_CENTER);
             l.setTextFill(Color.BROWN);
@@ -224,9 +225,15 @@ public class Board extends Application {
         consoleTextArea.setPrefRowCount(5);
 
 
+
+
+
+
+
         //vbox för utskrivt med saker
         VBox vboxText = new VBox();
         Label labelText = new Label(textLable);
+
         vboxText.getChildren().addAll(labelText, consoleTextArea);
 
 
