@@ -7,8 +7,6 @@ public enum Direction {
     LEFT;
 
     public Direction opposite() {
-        // TODO: Snygga till
-
         if (this == UP) {
             return DOWN;
         } else if (this == RIGHT) {
@@ -19,24 +17,5 @@ public enum Direction {
             return RIGHT;
     }
 
-    public static Direction random() {
-        Random random = new Random();
-        int randomdir = random.nextInt(4);
-        Direction dir = UP;
-        switch (randomdir) {
-            case 0:
-                break;
-            case 1:
-                dir = RIGHT;
-                break;
-            case 2:
-                dir = DOWN;
-                break;
-            case 3:
-                dir = LEFT;
-                break;
-        }
 
-        return dir;
-    }
 }

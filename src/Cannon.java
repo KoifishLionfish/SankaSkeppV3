@@ -29,6 +29,8 @@ public class Cannon {
 
 
 
+
+
     //******************************************************************************
     public String randomShotId(RectangleCell[][] rectangles) {
         // Förenklat randomShot för att bara få random koordinater

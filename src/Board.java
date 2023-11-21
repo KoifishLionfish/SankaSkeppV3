@@ -64,17 +64,32 @@ public class Board extends Application {
 
         }
 
+//orginalkod för att placer ut skepp
+//        int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+//        boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
+//
+//        //från jacob
+//        if (success) {
+//            System.out.println("Ships placed successfully!");
+//        } else {
+//            System.out.println("Failed to place ships.");
+//        }
 
+
+
+        //***************************************************
+        //testar att loopa igenom placering av skepp
+        boolean success=false;
         int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        boolean success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
-
-        //från jacob
-        if (success) {
-            System.out.println("Ships placed successfully!");
-        } else {
-            System.out.println("Failed to place ships.");
+        while(!success){
+            success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
+            if (success){
+                System.out.println("alla skepp placerades");
+            }
+            else {
+                System.out.println("Misslyckades med att placera skepp");
+            }
         }
-
 
         /////*******************************************************************************************
         //skriver ut buttons listan för att se om den är rätt

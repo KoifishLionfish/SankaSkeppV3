@@ -31,10 +31,14 @@ public class ServerClient implements Runnable {
     private int oldY;
     int count = 0;
     boolean skjuterPåAktivtSkepp = false;
+    String answerHitMiss;
 
     public ServerClient(boolean server) {
         this.server = server;
     }
+
+    String letters="abcdefghij";
+    final String[]letterNumberList=letters.split("");
 
     @Override
     public void run() {
@@ -125,7 +129,8 @@ public class ServerClient implements Runnable {
                 //börja gissa alltså skicka iväg data
 //-3
                 if (firstGuess && !server) {
-                    outgoingMessage = "i " + sendGuess();  //säger vad som ska finnas i outgoingMessage
+                  //  outgoingMessage = "i " + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy);  //säger vad som ska finnas i outgoingMessage
+                    outgoingMessage = "i " + "shoot " + sendFirstGuess();  //säger vad som ska finnas i outgoingMessage
                     writer.println(outgoingMessage);        //sätter in outgoinmessage i vår writer och skickar iväg meddelandet
                     System.out.println("my first message is " + outgoingMessage);
                     oldGuess = outgoingMessage; //anger old guess för att spara koordinaterna från gissningen
@@ -137,13 +142,14 @@ public class ServerClient implements Runnable {
 //-4
 
                             incomingmessage = reader.readLine(); //använder vår reader för att ta emot outgoingmessage som motståndaren skickade iväg med sin writer
+                            if (incomingmessage.equals("game over")) {
+                                System.out.println("Yaaay, jag vann");
+
+                                break;
+                            }
+
 //"h shoot 98"
 
-//                            try {
-//                                Thread.sleep(2000);
-//                            } catch (InterruptedException e) {
-//                                System.out.println("Could not pause due to:\n" + e.getMessage());
-//                            }
                             //om det är första gissningen och man är server har man ingen gammal gissning man kommer ihåg
                             //annars så tar man oldguess och delar upp till x & y som är ens förra gissnings koordinater som man i den här rundan får svar på om h/m
                             // if (testFörstaGissning && server) {
@@ -153,15 +159,12 @@ public class ServerClient implements Runnable {
 
                             } else {
                                 oldGuessList = oldGuess.split("");
+                                System.out.println("oldguess: "+oldGuess);
                                 oldX = Integer.parseInt(oldGuessList[8]);
-                                oldY = Integer.parseInt(oldGuessList[9]);
+                                //oldY = Integer.parseInt(oldGuessList[9]);
+                              oldY = Letters.valueOf((oldGuessList[9])).ordinal();
+                                System.out.println("Oldguess y: "+oldY);
                                 System.out.println("hej hej, min förra gissning var " + oldGuess);
-                            }
-
-                            try {
-                                Thread.sleep(20);
-                            } catch (InterruptedException e) {
-                                System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
 
                             //Skjuter på vår förra gissning beroende på svaret vi fick om h/m/s
@@ -171,14 +174,14 @@ public class ServerClient implements Runnable {
                             if (incomingmessage.startsWith("m")) {
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false));
                                 cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, false, false);
-                                System.out.println("ska skjuta på miss på " + oldX + oldY);
+                               // System.out.println("ska skjuta på miss på " + oldX + oldY);
 
 
                             } else if (incomingmessage.startsWith("h")) {
                                 skjuterPåAktivtSkepp = true;
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false));
                                 cannon.cannonBallHitStatusUpdate(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false);
-                                System.out.println("ska skjuta på hit");
+                                //System.out.println("ska skjuta på hit");
 
                             } else if (incomingmessage.startsWith("s")) {//
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, true));
@@ -198,17 +201,24 @@ public class ServerClient implements Runnable {
                             //   System.out.println("nya xy är: " + xNewGuess() + "" + yNewGuess());
 
 
+                            try {
+                                Thread.sleep(20);
+                            } catch (InterruptedException e) {
+                                System.out.println("Could not pause due to:\n" + e.getMessage());
+                            }
+
+
                             //ska få fram svar om hm på nya gissningen och uppdatera kartan för det
 //-5b)
-                            String answerHitMiss = cannon.cannonBallAnswer(battelBoard, battelBoard.rectangleCells, xNewGuess(), yNewGuess()); //använder cannonballAnswer för att returnera om h/m
+                            answerHitMiss = cannon.cannonBallAnswer(battelBoard, battelBoard.rectangleCells, xNewGuess(), yNewGuess()); //använder cannonballAnswer för att returnera om h/m
 //-5c)
                             Platform.runLater(cannon.cannonBallUpdateMap(battelBoard.rectangleCells, xNewGuess(), yNewGuess())); //använder cannonballUpdateMap för att uppdatera vårt spelbräde
-                            System.out.println("Svar om hm: " + answerHitMiss);
+                         //   System.out.println("Svar om hm: " + answerHitMiss);
 
 
 //-6
                             //skicka tillbaka meddelande om hit/miss plus ny gissning
-                            outgoingMessage = answerHitMiss + sendGuess();  //ger nytt värde på outgoing message ex "h shoot 11", alltså du träffade på din gissning och min nya gissning är 11
+                            outgoingMessage = sendGuess();  //ger nytt värde på outgoing message ex "h shoot 11", alltså du träffade på din gissning och min nya gissning är 11
                             writer.println(outgoingMessage);                //använder writer för att skicka iväg outgoingmessage till motståndaren som får det som använder reader för att få fram meddelandet
                             System.out.println("jag säger till dig " + outgoingMessage);
                             oldGuess = outgoingMessage; //ger nytt värde till oldGuess så vi kommer ihåg koordinaterna vi gissade på nu i nästa "varv"
@@ -231,16 +241,35 @@ public class ServerClient implements Runnable {
 
     public String sendGuess() {
         String guess;
-        if (incomingmessage != null && incomingmessage.startsWith("s")) {
-            count++;
-            if (count == 10) {
-                gameIsRunning = false;
-                System.out.println("YAAAAAAAAAAAAY");
-            }
+
+        if (answerHitMiss.equals("game over")) {
+            guess = answerHitMiss;
+                   System.out.println("jag förlorade");
+            gameIsRunning = false;
         }
-        System.out.println("Count: " + count);
-        guess = "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
+
+
+        else {
+            String []guessIndexSplit=cannon.randomShot(battelBoard.rectangleCellsEnemy).split(""); //delar upp xy
+            String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));//omvandlar y till bokstav
+            System.out.println("y som bokstav: "+indexYAsLetter);
+          //  guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
+            guess = answerHitMiss + "shoot " + guessIndexSplit[0]+indexYAsLetter;
+
+            // guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
+            //todo ska fixa så randomshot returnerar en siffra på andra index (1,b)
+        }
         return guess;
+    }
+
+    public String sendFirstGuess(){
+        String firstGuess;
+        String []guessIndexSplit=cannon.randomShot(battelBoard.rectangleCellsEnemy).split(""); //delar upp xy
+        String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));//omvandlar y till bokstav
+        System.out.println("y som bokstav: "+indexYAsLetter);
+        firstGuess=guessIndexSplit[0]+indexYAsLetter;
+
+        return firstGuess;
     }
 
 
@@ -257,7 +286,9 @@ public class ServerClient implements Runnable {
         // ex String incomingmessage = "h shoot 09";
         //Splittar meddelandet och tar index 9 för att få y
         String[] incomingMessageList = incomingmessage.split("");
-        int newY = Integer.parseInt(incomingMessageList[9]);
+      //  int newY = Integer.parseInt(incomingMessageList[9]);
+        int newY = Letters.valueOf((incomingMessageList[9])).ordinal();
+
         return newY;
     }
 }
