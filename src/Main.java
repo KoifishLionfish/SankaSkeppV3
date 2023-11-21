@@ -11,7 +11,9 @@ import javafx.stage.Stage;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -20,14 +22,16 @@ public class Main extends Application {
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
-//    Board battelBoard = new Board();
-//    battelBoard.start(new Stage());
+  public void start(Stage primaryStage) throws Exception {;
 
     StartingBoard startingBoard = new StartingBoard();
     startingBoard.start(new Stage());
 
 
+    String randomshooot="2"+"3";
+    String []guessIndexSplit=randomshooot.split("");
+    String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));
+    System.out.println(indexYAsLetter);
 
   }
 }
