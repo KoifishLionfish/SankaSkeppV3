@@ -11,17 +11,18 @@ import javafx.stage.Stage;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class Main extends Application {
 
-  public static void main(String[] args) {
-    launch(args);
-  }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 //    Board battelBoard = new Board();
 //    battelBoard.start(new Stage());
 
@@ -31,5 +32,28 @@ public class Main extends Application {
 
 
 
-  }
+
+        //i cannon ser en gissning ut 12 nu
+        //ska göra så det blir 1c
+        int x = 1;
+        int y = 2;
+        String guess;
+        guess = (x) + "" + Letters.intToLetter(y);
+        // System.out.println(guess);
+
+
+//i server client
+        //ser ut "m shoot 1c
+        //vill få till 12
+
+        String guesstest = "m shoot 1c";
+//
+        //Delar upp gamla gissningen
+        String[] oldGuessList = guesstest.split("");
+        int oldX = Integer.parseInt(oldGuessList[8]);
+        int oldY = Letters.valueOf((oldGuessList[9])).ordinal();
+
+
+        System.out.println("odlx: "+oldX+"oldY: "+oldY);
+    }
 }
