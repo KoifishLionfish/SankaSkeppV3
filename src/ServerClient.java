@@ -182,7 +182,6 @@ public class ServerClient implements Runnable {
                                // System.out.println("ska skjuta på miss på " + oldX + oldY);
 
 
-
                             } else if (incomingmessage.startsWith("h")) {
                                 skjuterPåAktivtSkepp = true;
                                 Platform.runLater(cannon.cannonBallHit(battelBoard.rectangleCellsEnemy, oldX, oldY, true, false));
