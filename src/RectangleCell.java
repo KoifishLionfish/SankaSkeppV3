@@ -7,8 +7,10 @@ public class RectangleCell {
 
     private boolean isShip=false;
     private boolean isActive=true;
+    private boolean isShot;
+    private String rectangleId;
 
-    private Rectangle rectangelCell;
+    private Rectangle rectangelCell = new Rectangle(25, 25);
 
     //Konstruktor
 
@@ -16,10 +18,10 @@ public class RectangleCell {
     //färg för att det är ett skepp så ändrar man i get/set för boolean
     // för ex isSHip så när man sätter isShip=true, ändras färgen samtidigt
     public RectangleCell() {
-        rectangelCell = new Rectangle(50, 50);
         rectangelCell.setFill(Color.ROYALBLUE);
         rectangelCell.setStroke(Color.BLACK);
     }
+
 
 
     //Getters och Setters
@@ -27,6 +29,7 @@ public class RectangleCell {
         if (isShip){
             rectangelCell.setFill(Color.ORANGE);
         }
+
         return isShip;
     }
 
@@ -38,7 +41,6 @@ public class RectangleCell {
         else rectangelCell.setFill(Color.ROYALBLUE);
 
     }
-
 
     public Rectangle getRectangelCell() {
         return rectangelCell;
@@ -56,6 +58,18 @@ public class RectangleCell {
         isActive = active;
     }
 
+    public String getRectangleId() {
+        return rectangleId;
+    }
 
+    public void setRectangleId(String rectangleId) {
+        this.rectangleId = rectangleId;
+    }
+    public boolean isShot() {
+        return isShot;
+    }
+
+    public void setIsShot(boolean isShot) {
+        this.isShot = isShot;
+    }
 }
-

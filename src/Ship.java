@@ -1,6 +1,8 @@
 import java.util.Random;
 
+
 public class Ship {
+
 
     // Metod för att slumpmässigt placera skepp på spelplanen
     static boolean placeRandomShips(RectangleCell[][] rectangles, int[] shipsPerSize) {
@@ -8,10 +10,12 @@ public class Ship {
         int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2};
         int maxAttempts = 500;
 
+
         // För varje skeppsstorlek i skeppstorlekslistan
         for (int index = 0; index < shipSizes.length; index++) {
             int shipSize = shipSizes[index];
             int numberOfShips = (index < shipsPerSize.length) ? shipsPerSize[index] : 0;
+
 
             // Placera det angivna antalet skepp av varje storlek
             for (int numOfShips = 0; numOfShips < numberOfShips; numOfShips++) {
@@ -26,10 +30,12 @@ public class Ship {
         return true;
     }
 
+
     // Placera skepp på spelplanen med en given storlek och antal försök
     static boolean placeShips(RectangleCell[][] rectangles, int shipSize, Random random, int maxAttempts) {
         int attempts = 0;
         boolean placed = false;
+
 
         // Försök placera skeppet tills det är placerat eller maxAntal försök uppnås
         while (!placed && attempts < maxAttempts) {
@@ -37,7 +43,9 @@ public class Ship {
             int rowRandom = random.nextInt(10);
             int colRandom = random.nextInt(10);
 
+
             boolean isValidPlacement = false;
+
 
             // Placera skeppet i den slumpmässiga riktningen
             if (directionRandom) {
@@ -78,6 +86,7 @@ public class Ship {
                 }
             }
 
+
             // Om placeringen är giltig, placera skeppet på spelplanen
             if (isValidPlacement) {
                 if (directionRandom) {
@@ -90,8 +99,8 @@ public class Ship {
                     }
                 }
                 placed = true;
-                deactivateNeighboringCells(rectangles, rowRandom, colRandom, shipSize, directionRandom);
             }
+
 
             attempts++;
             if (attempts >= maxAttempts) {
@@ -101,6 +110,7 @@ public class Ship {
         return placed;
     }
 
+
     // Återställer spelplanen till dess ursprungliga tillstånd
     private static void resetBoard(RectangleCell[][] rectangles) {
         for (int i = 0; i < rectangles.length; i++) {
@@ -109,60 +119,4 @@ public class Ship {
             }
         }
     }
-
-    private static void deactivateNeighboringCells(RectangleCell[][] rectangles, int row, int col, int shipSize, boolean direction) {
-        for (int i = Math.max(0, row - 1); i < Math.min(10, row + shipSize + 1); i++) {
-            for (int j = Math.max(0, col - 1); j < Math.min(10, col + 2); j++) {
-                rectangles[i][j].setIsActive(false);
-            }
-        }
-
-        // Extra logik för att deaktivera celler runt skeppet
-        if (direction) {
-            // Om skeppet placeras horisontellt
-            for (int i = Math.max(0, row - 1); i < Math.min(10, row + 2); i++) {
-                for (int j = Math.max(0, col - 1); j < Math.min(10, col + shipSize + 1); j++) {
-                    rectangles[i][j].setIsActive(false);
-                }
-            }
-        } else {
-            // Om skeppet placeras vertikalt
-            for (int i = Math.max(0, row - 1); i < Math.min(10, row + shipSize + 1); i++) {
-                for (int j = Math.max(0, col - 1); j < Math.min(10, col + 2); j++) {
-                    rectangles[i][j].setIsActive(false);
-                }
-            }
-        }
-
-    }
 }
-
-
-
-// Jacob D
-
-
-   /* public String getShipName() {
-        if (shipSize == 5) {
-            shipName = "Hangarfartyg";
-        } else if (shipSize == 4) {
-            shipName = "Slagskepp";
-        } else if (shipSize == 3) {
-            shipName = "Kryssare";
-        } else {
-            shipName = "Ubåt";
-        }
-        return shipName;
-    }
-
-    public void setShipName(String shipName) {
-        this.shipName = shipName;
-    }
-
-    public int getShipSize() {
-        return shipSize;
-    }
-
-    public void setShipSize(int shipSize) {
-        this.shipSize = shipSize;
-    }*/
