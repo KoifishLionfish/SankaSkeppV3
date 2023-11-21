@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -31,8 +32,8 @@ public class StartingBoard extends Application {
 
 
         primaryStage.setTitle("Start battleship");
-        primaryStage.setHeight(450);
-        primaryStage.setWidth(400);
+        primaryStage.setHeight(338);
+        primaryStage.setWidth(600);
 
 
         VBox mainVbox = new VBox();
@@ -46,17 +47,18 @@ public class StartingBoard extends Application {
         welcome.setFont(Font.font("Lucida Calligraphy", 30));
 
 
-        Label select = new Label("Select Server or Client to start the game");
-        select.setFont(Font.font("Lucida Calligraphy", 14));
+        Label select = new Label("");
 
 
-        //lägger till i buttonvbox
+        //lägger till i buttonvbox och skapar Id för objekt
         Button buttonServer = new Button("Server");
+        buttonServer.setId("serverButton");
         Button buttonClient = new Button("Client");
+        buttonClient.setId("buttonClient");
         Button buttonStart = new Button("Start game");
+        buttonStart.setId("startBtn");
 
 
-        buttonServer.setShape(new Circle(1.5));
         //startknappen inaktiv innan man valt server/klient
         //När man trycker på startknappen skapas en server/klient
         //start fönstret stängs och det nya fönstret öppnas ifrån server/client klassen
@@ -103,8 +105,9 @@ public class StartingBoard extends Application {
 
         mainVbox.getChildren().addAll(welcome, select, vBoxButtons);
 
-
+        mainVbox.setId("mainVbox");
         Scene scene = new Scene(mainVbox);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

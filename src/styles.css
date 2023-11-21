@@ -1,0 +1,53 @@
+#serverButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #3498db);
+}
+
+#buttonClient:hover {
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #3498db);
+}
+
+#startBtn:hover {
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #3498db);
+}
+
+.button {
+    -fx-padding: 7px 23px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-background-color: linear-gradient(to bottom, #3498db, #2980b9);
+    -fx-text-fill: #fff;
+}
+
+#startlabel{
+    -fx-stroke: black; /* Outline color */
+    -fx-stroke-width: 2; /* Outline width */
+    -fx-padding: 0 0 0 0;
+    -fx-margin: -20px 0 0 0;
+}
+
+.outlined-text{
+    -fx-fill: white; /* Text color */
+    -fx-stroke: black; /* Outline color */
+    -fx-stroke-width: 2; /* Outline width */
+    -fx-font-size: 33px; /* Font size */
+}
+
+.label{
+    -fx-text-fill: white;
+}
+
+#vboxlabel{
+    -fx-background-color: #3498db;
+    -fx-padding: 40px 20px 20px 20px;
+    -fx-alignment: center;
+}
+
+#mainVbox{
+    -fx-background-image: url("battleship.jpg");
+    -fx-background-size: cover;
+}
