@@ -26,6 +26,8 @@ public class Cannon {
     private int totalMisses = 0;
     private int totalHits = 0;
     private boolean previousHit = false;
+    private Board battelBoard = new Board();
+
 
 
 
@@ -127,11 +129,14 @@ public class Cannon {
 
             if ((shipLength - nrOfHits) == 0) {
                 System.out.println("You sunk my: " + currentShip);
+                battelBoard.appendToConsole("You sunk my: " + currentShip);
                 numberOfSunkenShips++;
 
                 deactivateCellsAroundShip(rectangles);
 
                 System.out.println("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
+                battelBoard.appendToConsole("You have sunken a total of: " + numberOfSunkenShips + "/" + NUMBER_OF_SHIPS + " Ships");
+
 
                 if (numberOfSunkenShips == NUMBER_OF_SHIPS) { // if all ships are sunk
                     inactivateCannon();

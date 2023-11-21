@@ -159,7 +159,7 @@ public class ServerClient implements Runnable {
                             }
 
                             try {
-                                Thread.sleep(20);
+                                Thread.sleep(200);
                             } catch (InterruptedException e) {
                                 System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
@@ -212,6 +212,7 @@ public class ServerClient implements Runnable {
                             writer.println(outgoingMessage);                //använder writer för att skicka iväg outgoingmessage till motståndaren som får det som använder reader för att få fram meddelandet
                             System.out.println("jag säger till dig " + outgoingMessage);
                             oldGuess = outgoingMessage; //ger nytt värde till oldGuess så vi kommer ihåg koordinaterna vi gissade på nu i nästa "varv"
+                            battelBoard.appendToConsole(outgoingMessage); // konsollen tar outgoingmessage och lägger in i konsollen
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -236,6 +237,7 @@ public class ServerClient implements Runnable {
             if (count == 10) {
                 gameIsRunning = false;
                 System.out.println("YAAAAAAAAAAAAY");
+                battelBoard.appendToConsole("You have won! Congratulations!");
             }
         }
         System.out.println("Count: " + count);
