@@ -254,6 +254,8 @@ public class ServerClient implements Runnable {
             System.out.println("y som bokstav: "+indexYAsLetter);
           //  guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
             guess = answerHitMiss + "shoot " + guessIndexSplit[0]+indexYAsLetter;
+
+            // guess = answerHitMiss + "shoot " + cannon.randomShot(battelBoard.rectangleCellsEnemy); //använder randomShotId som jag förenklat en del för att bara få ut random koordinater
             //todo ska fixa så randomshot returnerar en siffra på andra index (1,b)
         }
         return guess;

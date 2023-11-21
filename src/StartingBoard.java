@@ -6,8 +6,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
-
-
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,8 +22,6 @@ import java.awt.*;
 import java.util.Random;
 
 
-
-
 public class StartingBoard extends Application {
     private boolean server;
 
@@ -39,21 +35,15 @@ public class StartingBoard extends Application {
         primaryStage.setWidth(400);
 
 
-
-
         VBox mainVbox = new VBox();
         mainVbox.setAlignment(Pos.CENTER);
         mainVbox.setSpacing(20);
-
-
 
 
         //Lägger till högst upp i mainvbox
         Label welcome = new Label("Welcome to battleship");
         welcome.setTextFill(Color.ROYALBLUE);
         welcome.setFont(Font.font("Lucida Calligraphy", 30));
-
-
 
 
         Label select = new Label("Select Server or Client to start the game");
@@ -66,8 +56,6 @@ public class StartingBoard extends Application {
         Button buttonStart = new Button("Start game");
 
 
-
-
         buttonServer.setShape(new Circle(1.5));
         //startknappen inaktiv innan man valt server/klient
         //När man trycker på startknappen skapas en server/klient
@@ -76,8 +64,8 @@ public class StartingBoard extends Application {
         buttonStart.setOnAction(event -> {
                     primaryStage.close();
                     System.out.println("is server: " + server);
-                    ServerClient serverClient = new ServerClient(server);
-                   // ServerClientFunkarHeltOrörd serverClient = new ServerClientFunkarHeltOrörd(server);
+                      ServerClient serverClient = new ServerClient(server);
+                    //ServerClientFunkarHeltOrörd serverClient = new ServerClientFunkarHeltOrörd(server);
 
                     try {
                         serverClient.run();
@@ -88,22 +76,16 @@ public class StartingBoard extends Application {
         );
 
 
-
-
         buttonServer.setOnAction(event -> {
             server = true;
             buttonStart.setDisable(false);
         });
 
 
-
-
         buttonClient.setOnAction(event -> {
             server = false;
             buttonStart.setDisable(false);
         });
-
-
 
 
         Button buttonQuit = new Button("Quit Game");
@@ -126,8 +108,6 @@ public class StartingBoard extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-
 
 
     public boolean getServer() {
