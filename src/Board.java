@@ -38,14 +38,18 @@ public class Board extends Application {
     private TextArea consoleTextArea;
     private final int MAX_GUESSES = 10;
     private LinkedList<String> recentGuesses = new LinkedList<>();
+    static String audioFilePath = "src/audio.mp3";
+
+    static Media sound = new Media(new File(audioFilePath).toURI().toString());
+    static MediaPlayer mediaPlayer = new MediaPlayer(sound);
+
+
+
 
 
 
     public void startBoard(Stage primaryStage, String titel) throws Exception {
 
-        String audioFilePath = "src/audio.mp3";
-        Media sound = new Media(new File(audioFilePath).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
         // Spela audio-filen
         mediaPlayer.play();
 

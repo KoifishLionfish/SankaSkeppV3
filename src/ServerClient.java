@@ -238,6 +238,8 @@ public class ServerClient implements Runnable {
                 gameIsRunning = false;
                 System.out.println("YAAAAAAAAAAAAY");
                 battelBoard.appendToConsole("You have won! Congratulations!");
+                Board.mediaPlayer.stop();
+
             }
         }
         System.out.println("Count: " + count);
