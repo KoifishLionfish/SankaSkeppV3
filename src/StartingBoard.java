@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
-
 import java.util.Objects;
 
 
