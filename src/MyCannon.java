@@ -21,8 +21,6 @@ public class MyCannon {
     private boolean isShipVertical = false;
     private int horizontalRectangles = 0;
     private int verticalRectangles = 0;
-    private int totalMisses = 0;
-    private int totalHits = 0;
     private boolean previousHit = false;
     private String guess;
     int numberOfShipSunk = 0;

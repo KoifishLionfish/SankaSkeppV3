@@ -102,7 +102,6 @@ public class ServerClient implements Runnable {
                 Random random = new Random();
                 randomTime = random.nextInt(6001);
 
-
                 //client
                 //börja gissa alltså skicka iväg data
 //-3
