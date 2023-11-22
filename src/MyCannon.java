@@ -431,42 +431,6 @@ public class MyCannon {
     }
 
     //Methods to choose a direction
-    //utbytta gamla varianten
-//    public void aimUp(RectangleCell[][] rectangles, int x, int y) {
-//        if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
-//            followUpShot(rectangles, x, y, Direction.UP); // aim up
-//        } else { // else if rectangle above is red
-//            aimRandomDirection(rectangles, x, y); // choose new direction
-//        }
-//    }
-//
-//    public void aimRight(RectangleCell[][] rectangles, int x, int y) {
-//        if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
-//            followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
-//        } else { // else if rectangle to the right is red
-//            aimRandomDirection(rectangles, x, y); // choose new direction
-//        }
-//    }
-//
-//    public void aimDown(RectangleCell[][] rectangles, int x, int y) {
-//        if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
-//            followUpShot(rectangles, x, y, Direction.DOWN); // aim down
-//        } else { // else if rectangle under is red
-//            randomShot(rectangles); // choose new direction
-//        }
-//
-//    }
-//
-//    public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
-//
-//        if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
-//            followUpShot(rectangles, x, y, Direction.LEFT); // aim left
-//        } else { // else if rectangle to the left is red
-//            aimRandomDirection(rectangles, x, y); // choose new direction
-//        }
-//    }
-
-
     public void aimUp(RectangleCell[][] rectangles, int x, int y) {
         if (y > 0) {
             if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active

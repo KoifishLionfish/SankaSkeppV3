@@ -197,7 +197,7 @@ public class ServerClient implements Runnable {
                             System.out.println("du sa och gissade: " + incomingmessage);
 
                             try {
-                                Thread.sleep(100);
+                                Thread.sleep(1000);
                             } catch (InterruptedException e) {
                                 System.out.println("Could not pause due to:\n" + e.getMessage());
                             }
