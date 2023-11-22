@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
 import java.util.LinkedList;
-
+//Malin
 
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
@@ -191,6 +191,7 @@ public class Board extends Application {
     public void start(Stage primaryStage) throws Exception {
     }
 
+    //Linus
     public void appendToConsole(String message) {
         recentGuesses.add(message);
         if (recentGuesses.size() > MAX_GUESSES) {

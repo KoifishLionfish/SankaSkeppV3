@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import java.util.Objects;
 
-
+//Malin, Jacob, Linus
 
 public class StartingBoard extends Application {
     private boolean server;
@@ -18,11 +18,9 @@ public class StartingBoard extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
         primaryStage.setTitle("Start battleship");
         primaryStage.setHeight(338);
         primaryStage.setWidth(600);
-
 
         VBox mainVbox = new VBox();
         mainVbox.setAlignment(Pos.CENTER);
@@ -55,7 +53,6 @@ public class StartingBoard extends Application {
                     primaryStage.close();
                     System.out.println("is server: " + server);
                       ServerClient serverClient = new ServerClient(server);
-                    //ServerClientFunkarHeltOrörd serverClient = new ServerClientFunkarHeltOrörd(server);
 
                     try {
                         serverClient.run();

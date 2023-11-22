@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
-
+//Malin (Linus)
 
 public class ServerClient implements Runnable {
 
@@ -138,9 +138,7 @@ public class ServerClient implements Runnable {
                                 oldY = Letters.valueOf((oldGuessList[9])).ordinal();
                             }
 
-
                             if (incomingmessage.startsWith("i")) {
-
                             } else if (incomingmessage.startsWith("h")) {
                                 battelBoard.appendToConsole("And I hit ");
                             } else if (incomingmessage.startsWith("m")) {
@@ -149,7 +147,6 @@ public class ServerClient implements Runnable {
                                 battelBoard.appendToConsole("And I sunk the ship ");
                             } else {
                                 battelBoard.appendToConsole("And I sunk your last ship and won");
-
                             }
 
 

@@ -1,7 +1,7 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-
+//Malin, (Fredrik)
 public class RectangleCell {
     private boolean isShip=false;
     private boolean isActive=true;

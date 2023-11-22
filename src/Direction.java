@@ -1,9 +1,11 @@
+//Fredrik
 public enum Direction {
     UP,
     RIGHT,
     DOWN,
     LEFT;
 
+    //Malin
     public Direction opposite() {
         if (this == UP) {
             return DOWN;

@@ -3,7 +3,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.*;
 
-//++ Fredrik L
+//++ Fredrik L (Malin)
 public class MyCannon {
     private final List<Integer> initialHitX = new ArrayList<>();
     private final List<Integer> initialHitY = new ArrayList<>();
