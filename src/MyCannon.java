@@ -26,14 +26,11 @@ public class MyCannon {
     private boolean previousHit = false;
     private String guess;
     int numberOfShipSunk = 0;
-
+    private Boolean shipdirection = null;
 
 
     // random shot
     public String randomShot(RectangleCell[][] rectangles) {
-
-        System.out.println("randomShot: initialHitX:" + initialHitX + ", initialHitX" + initialHitY);
-        System.out.println("randomShot: latestShotX:" + latestShotX + ", latestShotY" + latestShotY);
 
         // Random number generator
         Random randomHit = new Random();
@@ -45,8 +42,6 @@ public class MyCannon {
             // if rectangle isnt black and isnt hit ship (RED) & is active
             if (!isCellBlack(rectangles, x, y) && !isHit(rectangles, x, y) && isActive(rectangles, x, y)) { //
               guess = (x) + "" + (y);
-                //   guess = (x) + "" + Letters.intToLetter(y);
-
             } else {
                 randomShot(rectangles); // if cell is black or red(hit), shoot again
             }
@@ -71,16 +66,7 @@ public class MyCannon {
                 y = initialHitY.get(0);
 
 
-
-                //använder för att kolla om värden på initialhit listan stämmer
-//                for (int i : initialHitX) {
-//                    System.out.println("initial x: " + i);
-//                }
-//                for (int i : initialHitY) {
-//                    System.out.println("initial y: " + i);
-//                }
                 if (previousDirection == null) {
-                   // System.out.println("previousDirection.isEmpty(): " + x + ", " + y);
                     aimRandomDirection(rectangles, x, y);
                 } else { // else, if previousDirection has direction
                     if (previousDirection == Direction.UP) {
@@ -114,7 +100,6 @@ public class MyCannon {
                     } else { // if its not black and not inactive
 
                       guess = (x) + "" + (y);
-                        //   guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.UP;
                         //handleFollowUpResult();
                     }
@@ -128,7 +113,6 @@ public class MyCannon {
                             randomShot(rectangles); // shoot somehwere else
                         }
                          guess = (x) + "" + (y);
-                        //guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.UP;
                     }
@@ -144,7 +128,6 @@ public class MyCannon {
                     } else { // if its not black
 
                          guess = (x) + "" + (y);
-                        // guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.RIGHT;
                         //handleFollowUpResult();
                     }
@@ -158,7 +141,6 @@ public class MyCannon {
                         }
 
                          guess = (x) + "" + (y);
-                        // guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.RIGHT;
                     }
@@ -174,7 +156,6 @@ public class MyCannon {
                     } else { // if its not black
 
                          guess = (x) + "" + (y);
-                        //guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.DOWN;
                         //handleFollowUpResult();
                     }
@@ -188,7 +169,6 @@ public class MyCannon {
                         }
 
                          guess = (x) + "" + (y);
-                        //  guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.DOWN;
                         //handleFollowUpResultAgain();
                     }
@@ -204,7 +184,6 @@ public class MyCannon {
                     } else { // if its not black
 
                          guess = (x) + "" + (y);
-                        //  guess = (x) + "" + Letters.intToLetter(y);
                         previousDirection = Direction.LEFT;
                         //handleFollowUpResult();
                     }
@@ -217,7 +196,6 @@ public class MyCannon {
                             randomShot(rectangles);
                         }
                          guess = (x) + "" + (y);
-                        // guess = (x) + "" + Letters.intToLetter(y);
                         //handleFollowUpResultAgain();
                         previousDirection = Direction.LEFT;
                     }
@@ -345,8 +323,6 @@ public class MyCannon {
 
     //Choose a random direction
     public void aimRandomDirection(RectangleCell[][] rectangles, int x, int y) {
-        //System.out.println("aimRandomDirection: x: " + x + ", y: " + y);
-
         Random random = new Random();
         int randomNr;
 
@@ -448,7 +424,6 @@ public class MyCannon {
                 aimDown(rectangles, x, y);
             } else if (randomNr == 3) {
                 aimLeft(rectangles, x, y);
-                System.out.println("Blir det jämt fel här???");
             } else {
                 aimUp(rectangles, x, y);
             }
@@ -456,47 +431,96 @@ public class MyCannon {
     }
 
     //Methods to choose a direction
+    //utbytta gamla varianten
+//    public void aimUp(RectangleCell[][] rectangles, int x, int y) {
+//        if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
+//            followUpShot(rectangles, x, y, Direction.UP); // aim up
+//        } else { // else if rectangle above is red
+//            aimRandomDirection(rectangles, x, y); // choose new direction
+//        }
+//    }
+//
+//    public void aimRight(RectangleCell[][] rectangles, int x, int y) {
+//        if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
+//            followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
+//        } else { // else if rectangle to the right is red
+//            aimRandomDirection(rectangles, x, y); // choose new direction
+//        }
+//    }
+//
+//    public void aimDown(RectangleCell[][] rectangles, int x, int y) {
+//        if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
+//            followUpShot(rectangles, x, y, Direction.DOWN); // aim down
+//        } else { // else if rectangle under is red
+//            randomShot(rectangles); // choose new direction
+//        }
+//
+//    }
+//
+//    public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
+//
+//        if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
+//            followUpShot(rectangles, x, y, Direction.LEFT); // aim left
+//        } else { // else if rectangle to the left is red
+//            aimRandomDirection(rectangles, x, y); // choose new direction
+//        }
+//    }
+
+
     public void aimUp(RectangleCell[][] rectangles, int x, int y) {
-        if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
-            followUpShot(rectangles, x, y, Direction.UP); // aim up
-        } else { // else if rectangle above is red
-            aimRandomDirection(rectangles, x, y); // choose new direction
+        if (y > 0) {
+            if (!isHit(rectangles, x, y - 1) && isActive(rectangles, x, y - 1) && !isCellBlack(rectangles, x, y - 1)) { // if rectangle above is not red(hit) & active
+                followUpShot(rectangles, x, y, Direction.UP); // aim up
+            } else { // else if rectangle above is red
+                aimRandomDirection(rectangles, x, y); // choose new direction
+            }
+        } else {
+            aimRandomDirection(rectangles, x, y);
         }
+
     }
 
     public void aimRight(RectangleCell[][] rectangles, int x, int y) {
-        if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
-            followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
-        } else { // else if rectangle to the right is red
-            aimRandomDirection(rectangles, x, y); // choose new direction
+        if (x < 9) {
+            if (!isHit(rectangles, x + 1, y) && isActive(rectangles, x + 1, y) && !isCellBlack(rectangles, x + 1, y)) { // if rectangle to the right is not red(hit) & active
+                followUpShot(rectangles, x, y, Direction.RIGHT); // aim right
+            } else { // else if rectangle to the right is red
+                aimRandomDirection(rectangles, x, y); // choose new direction
+            }
+        } else {
+            aimRandomDirection(rectangles, x, y);
         }
+
     }
 
     public void aimDown(RectangleCell[][] rectangles, int x, int y) {
-        if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
-            followUpShot(rectangles, x, y, Direction.DOWN); // aim down
-        } else { // else if rectangle under is red
-            randomShot(rectangles); // choose new direction
+        if (y < 9) {
+            if (!isHit(rectangles, x, y + 1) && isActive(rectangles, x, y + 1) && !isCellBlack(rectangles, x, y + 1)) { // if rectangle under is not red(hit) & active
+                followUpShot(rectangles, x, y, Direction.DOWN); // aim down
+            } else { // else if rectangle under is red
+                aimRandomDirection(rectangles, x, y); // choose new direction
+            }
+        } else {
+            aimRandomDirection(rectangles, x, y);
         }
-
     }
+
 
     public void aimLeft(RectangleCell[][] rectangles, int x, int y) {
 
-        if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
-            followUpShot(rectangles, x, y, Direction.LEFT); // aim left
-        } else { // else if rectangle to the left is red
-            aimRandomDirection(rectangles, x, y); // choose new direction
+        if (x > 0) {
+            if (!isHit(rectangles, x - 1, y) && isActive(rectangles, x - 1, y)  && !isCellBlack(rectangles, x - 1, y)) { // if rectangle to the left is not red(hit) & active
+                followUpShot(rectangles, x, y, Direction.LEFT); // aim left
+            } else { // else if rectangle to the left is red
+                aimRandomDirection(rectangles, x, y); // choose new direction
+            }
+        } else {
+            aimRandomDirection(rectangles, x, y);
         }
     }
 
-
-    //******************************************************************************
-    //  Är i princip tre metoder ifrån cannonBall. En som kollar på "myBoard" och ser om gissningen var miss/träff och returnerar det.
-    //    En som uppdaterar "myBoard" med gissningen och en som uppdaterar enemyBoard utrifån svaret som ges ifrån första metoden
     public Runnable cannonBallHit(RectangleCell[][] rectangles, int x, int y, boolean hit, boolean sink) {
-        //uppdaterar kartan beroende på svar om h/m på enemyBoard
-
+        //uppdaterar kartan beroende på svar om h/m/s på enemyBoard
         Runnable runnableToReturn = new Runnable() {
             @Override
             public void run() {
@@ -514,7 +538,7 @@ public class MyCannon {
 
 
     public void cannonBallHitStatusUpdate(RectangleCell[][] rectangles, int x, int y, boolean hit, boolean sink) {
-
+//sparar data om skott efter
         if (hit) {
             rectangles[x][y].setIsShipStatus(true);
             saveDataHit(rectangles, x, y);
@@ -565,13 +589,9 @@ public class MyCannon {
         return runnableToReturn;
     }
 
-
-    //******************************************************************************
-
     // Check color of rectangle
 
     public boolean isHit(RectangleCell[][] rectangles, int x, int y) {
-
         return rectangles[x][y].getIsShip();
     }
 
@@ -743,38 +763,9 @@ public class MyCannon {
         scanShipLength(rectangles, x, y); // scan ship for knowing when its broken later
         typeOfShip(); // writes what type of ship it is to check for errors
 
-        //
         rectangles[x][y].setIsShipStatus(true);
-
     }
 
-    public void handleFollowUpResultORIG(RectangleCell[][] rectangleCells, int x, int y) {
-        if (previousDirection == Direction.UP) {
-            if (y == 0) {
-                handleFollowUpResultIfEdgeOfShipReached(rectangleCells, x, y, Direction.UP);
-            } else {
-                handleFollowUpResultIfEdgeOfShipNotReached(rectangleCells, x, y, Direction.UP);
-            }
-        } else if (previousDirection == Direction.RIGHT) {
-            if (x == 9) {
-                handleFollowUpResultIfEdgeOfShipReached(rectangleCells, x, y, Direction.RIGHT);
-            } else {
-                handleFollowUpResultIfEdgeOfShipNotReached(rectangleCells, x, y, Direction.RIGHT);
-            }
-        } else if (previousDirection == Direction.DOWN) {
-            if (y == 9) {
-                handleFollowUpResultIfEdgeOfShipReached(rectangleCells, x, y, Direction.DOWN);
-            } else {
-                handleFollowUpResultIfEdgeOfShipNotReached(rectangleCells, x, y, Direction.DOWN);
-            }
-        } else if (previousDirection == Direction.LEFT) {
-            if (x == 0) {
-                handleFollowUpResultIfEdgeOfShipReached(rectangleCells, x, y, Direction.LEFT);
-            } else {
-                handleFollowUpResultIfEdgeOfShipNotReached(rectangleCells, x, y, Direction.LEFT);
-            }
-        }
-    }
 
     public void handleFollowUpResult(RectangleCell[][] rectangleCells, int x, int y) {
         if (previousDirection == Direction.UP) {
@@ -804,10 +795,9 @@ public class MyCannon {
         }
     }
 
-    private Boolean riktningPåSkepp = null;
+
 
     public void handleFollowUpResultIfEdgeOfShipNotReached(RectangleCell[][] rectangles, int x, int y, Direction direction) {
-        System.out.println("Edge NOT reached: x: " + x + ", y: " + y + ", dir: " + direction);
         if (isHit(rectangles, x, y)) { // if it hits a ship
             nrOfHits++; // add hit
 
@@ -817,14 +807,14 @@ public class MyCannon {
         } else { // if cannonball misses
             if (direction == Direction.UP || direction == Direction.DOWN) {
 
-                riktningPåSkepp = Boolean.FALSE.equals(isShipHorizontal());
+                shipdirection = Boolean.FALSE.equals(isShipHorizontal());
 
             } else {
-                riktningPåSkepp = isShipHorizontal();
+                shipdirection = isShipHorizontal();
             }
             resetLatestShotListAndPreviousDirection();
 
-            if (previousDirection == direction && Boolean.TRUE.equals(riktningPåSkepp)) {
+            if (previousDirection == direction && Boolean.TRUE.equals(shipdirection)) {
                 //  resetLatestShotListAndPreviousDirection(); // Reset LatestShot
                 previousDirection = direction.opposite();
             }
@@ -832,7 +822,6 @@ public class MyCannon {
     }
 
     public void handleFollowUpResultIfEdgeOfShipReached(RectangleCell[][] rectangles, int x, int y, Direction direction) {
-        System.out.println("Edge reached: x: " + x + ", y: " + y + ", dir: " + direction);
         if (isHit(rectangles, x, y)) { // if it hits a ship
             nrOfHits++; // register hit
             previousHit = true;
@@ -842,12 +831,12 @@ public class MyCannon {
 
         } else { // if it misses
             if (direction == Direction.UP || direction == Direction.DOWN) {
-                riktningPåSkepp = Boolean.FALSE.equals(isShipHorizontal());
+                shipdirection = Boolean.FALSE.equals(isShipHorizontal());
             } else {
-                riktningPåSkepp = isShipHorizontal();
+                shipdirection = isShipHorizontal();
             }
 
-            if (previousDirection == direction && Boolean.TRUE.equals(riktningPåSkepp)) {// && nrOfHits > 1) {
+            if (previousDirection == direction && Boolean.TRUE.equals(shipdirection)) {// && nrOfHits > 1) {
                 resetLatestShotListAndPreviousDirection();
                 previousDirection = direction.opposite();
             } else {
@@ -886,20 +875,14 @@ public class MyCannon {
         previousHit = false;
         previousDirection = null;
         resetLatestShotListAndPreviousDirection();
-
     }
 
-    public boolean isPreviousHit() {
-        return previousHit;
-    }
 
     public boolean isShipSunk(RectangleCell[][] rectangleCells, int x, int y) {
 
         //om det inte finns fler aktiva skeppsdelar åt något håll returnera true
         //aka om det inte finns fler gula celler
         return !finnsFlerSkepp(rectangleCells, x, y, Direction.UP) && !finnsFlerSkepp(rectangleCells, x, y, Direction.RIGHT) && !finnsFlerSkepp(rectangleCells, x, y, Direction.DOWN) && !finnsFlerSkepp(rectangleCells, x, y, Direction.LEFT);
-
-
     }
 
     public boolean finnsFlerSkepp(RectangleCell[][] rectangleCells, int x, int y, Direction direction) {
@@ -924,7 +907,6 @@ public class MyCannon {
         if (newX > 9 || newX < 0 || newY > 9 || newY < 0) {
             return false;
         }
-
 
         Color cellColor = (Color) rectangleCells[newX][newY].getRectangelCell().getFill();
 

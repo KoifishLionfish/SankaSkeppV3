@@ -14,7 +14,7 @@ import java.util.LinkedList;
 public class Board extends Application {
     RectangleCell[][] rectangleCells;
     RectangleCell[][] rectangleCellsEnemy;
-    private String textLable ="Console output: ";
+    private String textLable = "Console output: ";
     private TextArea consoleTextArea;
     private final int MAX_GUESSES = 10;
     private LinkedList<String> recentGuesses = new LinkedList<>();
@@ -24,7 +24,7 @@ public class Board extends Application {
 
         primaryStage.setTitle(titel);
         primaryStage.setHeight(350);
-        primaryStage.setWidth(700);
+        primaryStage.setWidth(750);
 
 
         rectangleCells = new RectangleCell[10][10];
@@ -51,30 +51,27 @@ public class Board extends Application {
                 rektangelId = String.valueOf(idChar) + idNumber;
                 rectangleCells[i][j].setRectangleId(rektangelId);
             }
-
-
         }
 
 
         //testar att loopa igenom placering av skepp
-        boolean success=false;
+        boolean success = false;
         int[] shipsPerSize = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        while(!success){
+        while (!success) {
             success = Ship.placeRandomShips(rectangleCells, shipsPerSize);
-            if (success){
+            if (success) {
                 System.out.println("alla skepp placerades");
-            }
-            else {
+            } else {
                 System.out.println("Misslyckades med att placera skepp");
             }
         }
 
 
-        //En hBox som läggs högst upp i fönstret (med position)
+        //En hBox som läggs högst upp i fönstret (med position) för min karta
         HBox hbox = new HBox();
-        hbox.setSpacing(0);
+        hbox.setSpacing(1);
         Label emptyLabel = new Label();
-        emptyLabel.setPrefSize(25, 25);
+        emptyLabel.setPrefSize(24.9, 25);
         hbox.getChildren().add(emptyLabel);
         for (int i = 0; i < 10; i++) {
             String place = "";
@@ -90,9 +87,9 @@ public class Board extends Application {
         }
 
 
-        //En vBox som läggslängst till vänster i fönstret (med position)
+        //En vBox som läggslängst till vänster i fönstret (med position) för min karta
         VBox vbox = new VBox();
-        vbox.setSpacing(0);
+        vbox.setSpacing(1.48);
         for (int i = 0; i < 10; i++) {
             char ascii = (char) (65 + i);
             Label l = new Label();
@@ -123,19 +120,15 @@ public class Board extends Application {
                 RectangleCell rectangleCellEnemy = new RectangleCell();
                 rectangleCellsEnemy[i][j] = rectangleCellEnemy;
                 paneEnemy.add(rectangleCellsEnemy[i][j].getRectangelCell(), i, j);
-
-
             }
-
-
         }
 
 
-        //En hBox som läggs högst upp i fönstret (med position)
+        //En hBox som läggs högst upp i fönstret (med position) för fiendekarta
         HBox hboxEnemy = new HBox();
-        hbox.setSpacing(0);
+        hboxEnemy.setSpacing(1);
         emptyLabel = new Label();
-        emptyLabel.setPrefSize(25, 25);
+        emptyLabel.setPrefSize(24.9, 25);
         hboxEnemy.getChildren().add(emptyLabel);
         for (int i = 0; i < 10; i++) {
             String place = "";
@@ -151,9 +144,9 @@ public class Board extends Application {
         }
 
 
-        //En vBox som läggslängst till vänster i fönstret (med position)
+        //En vBox som läggslängst till vänster i fönstret (med position) för fiendekarta
         VBox vboxEnemy = new VBox();
-        vbox.setSpacing(0);
+        vboxEnemy.setSpacing(1.48);
         for (int i = 0; i < 10; i++) {
             char ascii = (char) (65 + i);
             Label l = new Label();
@@ -169,16 +162,14 @@ public class Board extends Application {
         consoleTextArea.setEditable(false);
         consoleTextArea.setWrapText(true);
         consoleTextArea.setPrefRowCount(5);
-
+        consoleTextArea.setPrefSize(150, 180);
 
         //vbox för utskrivt med saker
         VBox vboxText = new VBox();
         Label labelText = new Label(textLable);
         vboxText.getChildren().addAll(labelText, consoleTextArea);
 
-
         BorderPane borderPaneEnemy = new BorderPane();
-
 
         borderPaneEnemy.setTop(hboxEnemy);
         borderPaneEnemy.setLeft(vboxEnemy);
@@ -199,6 +190,7 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     }
+
     public void appendToConsole(String message) {
         recentGuesses.add(message);
         if (recentGuesses.size() > MAX_GUESSES) {
@@ -206,6 +198,7 @@ public class Board extends Application {
         }
         updateConsole();
     }
+
     private void updateConsole() {
         StringBuilder text = new StringBuilder();
         for (String guess : recentGuesses) {

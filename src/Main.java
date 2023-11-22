@@ -27,11 +27,5 @@ public class Main extends Application {
     StartingBoard startingBoard = new StartingBoard();
     startingBoard.start(new Stage());
 
-
-        String randomshooot="2"+"3";
-        String []guessIndexSplit=randomshooot.split("");
-        String indexYAsLetter=Letters.intToLetter(Integer.parseInt(guessIndexSplit[1]));
-        System.out.println(indexYAsLetter);
-
     }
 }
